@@ -1,0 +1,37 @@
+{
+  "name": "kirana",
+  "license": "0BSD",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.6",
+    "@mui/material": "^7.3.6",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-picker/picker": "2.11.1",
+    "expo": "~54.0.25",
+    "expo-linear-gradient": "~15.0.8",
+    "expo-status-bar": "~3.0.8",
+    "lucide-react": "^0.555.0",
+    "lucide-react-native": "^0.556.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-svg": "15.12.1",
+    "react-native-web": "^0.21.0"
+  },
+  "private": true,
+  "devDependencies": {
+    "autoprefixer": "^10.4.22",
+    "metro-react-native-babel-preset": "^0.77.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.1"
+  }
+}
