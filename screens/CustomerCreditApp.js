@@ -23,6 +23,8 @@ const CustomerCreditApp = () => {
   useEffect(() => {
     (async () => {
       const stored = await loadCustomers();
+      console.log("stored: ", stored);
+
       if (stored) setCustomers(stored);
     })();
   }, []);
@@ -40,7 +42,7 @@ const CustomerCreditApp = () => {
       name: newCustomer.name,
       phone: newCustomer.phone,
       balance: 0,
-      transactions: []
+      transactions: [],
     };
 
     saveCustomers([...customers, newEntry]);
@@ -93,13 +95,13 @@ const CustomerCreditApp = () => {
           date: new Date().toISOString(),
           amount: update.amount,
           type: update.type,
-          balance: newBal
+          balance: newBal,
         };
 
         return {
           ...customer,
           balance: newBal,
-          transactions: [...customer.transactions, transaction]
+          transactions: [...customer.transactions, transaction],
         };
       }
 
@@ -130,8 +132,7 @@ const CustomerCreditApp = () => {
   };
 
   const filteredCustomers = () => {
-    let data = customers;
-
+    let data = customers;    
     if (searchTerm)
       data = data.filter(
         (c) =>
@@ -181,7 +182,7 @@ const CustomerCreditApp = () => {
 
         {activeTab === 2 && (
           <CustomerList
-            customers={filteredCustomers()}
+            data={filteredCustomers().length>0 ? filteredCustomers() : customers}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             filterDate={filterDate}
