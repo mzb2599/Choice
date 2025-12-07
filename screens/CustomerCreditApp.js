@@ -23,7 +23,6 @@ const CustomerCreditApp = () => {
   useEffect(() => {
     (async () => {
       const stored = await loadCustomers();
-      console.log("stored: ", stored);
 
       if (stored) setCustomers(stored);
     })();

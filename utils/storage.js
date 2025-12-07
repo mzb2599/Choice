@@ -6,7 +6,6 @@ const STORAGE_KEY = "customers";
 export const loadCustomers = async () => {
   try {
     const json = await AsyncStorage.getItem(STORAGE_KEY);
-    console.log("Loaded customers:", json);
     return json ? JSON.parse(json) : [];
   } catch (error) {
     console.error("Error loading customers:", error);

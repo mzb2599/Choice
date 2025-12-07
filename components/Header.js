@@ -9,7 +9,7 @@ export default function Header({ totalBalance, todayBalance }) {
       <View style={styles.headerContent}>
         <View style={styles.headerTitle}>
           <View>
-            <Text style={styles.headerH1}>Credit Manager Pro</Text>
+            <Text style={styles.headerH1}>Choice Kirana</Text>
             <Text style={styles.headerSub}>Customer Order Management</Text>
           </View>
         </View>
