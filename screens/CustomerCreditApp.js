@@ -158,7 +158,6 @@ const CustomerCreditApp = () => {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <Header totalBalance={totalBalance} todayBalance={todayBalance} />
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {activeTab === 0 && (
