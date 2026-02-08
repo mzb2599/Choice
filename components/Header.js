@@ -1,31 +1,50 @@
 import React from "react";
-import { View, Text } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { styles } from "../styles/appStyles";
+import { DollarSign } from "lucide-react";
+import { styles } from "../styles/webStyles";
 
-export default function Header({ totalBalance, todayBalance }) {
+export default function HeaderWeb({ totalBalance, todayBalance }) {
   return (
-    <LinearGradient colors={["#1e3c72", "#2a5298"]} style={styles.header}>
-      <View style={styles.headerContent}>
-        <View style={styles.headerTitle}>
-          <View>
-            <Text style={styles.headerH1}>Choice Kirana</Text>
-            <Text style={styles.headerSub}>Customer Order Management</Text>
-          </View>
-        </View>
+    <div style={styles.header}>
+      <div style={styles.headerContent}>
+        <div style={styles.headerTitle}>
+          <div style={styles.iconBox}>
+            <DollarSign size={28} color="white" />
+          </div>
+          <div>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: "22px",
+                fontWeight: "700",
+                color: "#212529",
+              }}
+            >
+              Credit Manager Pro
+            </h1>
+            <p
+              style={{
+                margin: "4px 0 0 0",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "400",
+              }}
+            >
+              Professional Customer Order Management
+            </p>
+          </div>
+        </div>
 
-        <View style={styles.balanceCards}>
-          <View style={styles.balanceCard}>
-            <Text style={styles.balanceLabel}>Total Balance</Text>
-            <Text style={styles.balanceValue}>₹{totalBalance.toFixed(2)}</Text>
-          </View>
-
-          <View style={styles.balanceCard}>
-            <Text style={styles.balanceLabel}>Today's Total</Text>
-            <Text style={styles.balanceValue}>₹{todayBalance.toFixed(2)}</Text>
-          </View>
-        </View>
-      </View>
-    </LinearGradient>
+        <div style={styles.balanceCards}>
+          <div style={styles.balanceCard}>
+            <div style={styles.balanceLabel}>Total Balance</div>
+            <div style={styles.balanceAmount}>₹{totalBalance.toFixed(2)}</div>
+          </div>
+          <div style={styles.balanceCard}>
+            <div style={styles.balanceLabel}>Today's Total</div>
+            <div style={styles.balanceAmount}>₹{todayBalance.toFixed(2)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

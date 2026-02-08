@@ -1,37 +1,58 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { Plus } from "lucide-react-native";
-import { styles } from "../styles/appStyles";
+import { Plus } from "lucide-react";
+import { styles } from "../styles/webStyles";
 
-export default function AddCustomer({ newCustomer, setNewCustomer, handleAddCustomer }) {
+export default function AddCustomerWeb({
+  newCustomer,
+  setNewCustomer,
+  handleAddCustomer,
+}) {
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Add New Customer</Text>
-
-      <Text style={styles.label}>Customer Name</Text>
-      <TextInput
-        style={styles.input}
-        value={newCustomer.name}
-        onChangeText={(t) => setNewCustomer({ ...newCustomer, name: t })}
-        placeholder="Enter customer name"
-      />
-
-      <Text style={styles.label}>Phone Number</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="phone-pad"
-        value={newCustomer.phone}
-        onChangeText={(t) => setNewCustomer({ ...newCustomer, phone: t })}
-        placeholder="Enter phone number"
-      />
-
-      <TouchableOpacity
-        style={[styles.button, styles.buttonPrimary]}
-        onPress={handleAddCustomer}
+    <div style={styles.paper}>
+      <h2
+        style={{
+          marginTop: 0,
+          marginBottom: "24px",
+          fontSize: "20px",
+          fontWeight: "700",
+          color: "#212529",
+        }}
       >
-        <Plus size={20} color="#fff" />
-        <Text style={styles.buttonText}>Add Customer</Text>
-      </TouchableOpacity>
-    </View>
+        Add New Customer
+      </h2>
+
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Customer Name</label>
+        <input
+          type="text"
+          value={newCustomer.name}
+          onChange={(e) =>
+            setNewCustomer({ ...newCustomer, name: e.target.value })
+          }
+          style={styles.input}
+          placeholder="Enter customer name"
+        />
+      </div>
+
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Phone Number</label>
+        <input
+          type="tel"
+          value={newCustomer.phone}
+          onChange={(e) =>
+            setNewCustomer({ ...newCustomer, phone: e.target.value })
+          }
+          style={styles.input}
+          placeholder="Enter phone number"
+        />
+      </div>
+
+      <button
+        onClick={handleAddCustomer}
+        style={{ ...styles.button, ...styles.buttonPrimary }}
+      >
+        <Plus size={20} /> Add Customer
+      </button>
+    </div>
   );
 }

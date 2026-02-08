@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import HeaderWeb from "./components/HeaderWeb";
-import TabsWeb from "./components/TabsWeb";
-import AddCustomerWeb from "./components/AddCustomerWeb";
-import BulkUpdateWeb from "./components/BulkUpdateWeb";
-import CustomerListWeb from "./components/CustomerListWeb";
-import StatusAlertWeb from "./components/StatusAlertWeb";
+import HeaderWeb from "./components/Header";
+import TabsWeb from "./components/Tabs";
+import AddCustomerWeb from "./components/AddCustomer";
+import BulkUpdateWeb from "./components/BulkUpdate";
+import CustomerListWeb from "./components/CustomerList";
+import StatusAlertWeb from "./components/StatusAlert";
 import {
   loadCustomers,
   saveCustomers as saveToStorage,
