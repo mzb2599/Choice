@@ -10,7 +10,7 @@ import {
   saveCustomers as saveToStorage,
 } from "./utils/localStorage";
 import { parseBulkUpdates } from "./utils/bulkParser";
-import { Styles } from "./styles/Styles.web";
+import { Styles } from "./styles/Styles";
 import { View } from "react-native";
 
 const App = () => {

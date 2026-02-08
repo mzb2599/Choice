@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, FlatList } from "react-native";
 import { Users, TrendingUp, TrendingDown } from "lucide-react-native";
-import { Styles } from "../styles/Styles.web";
+import { Styles } from "../styles/Styles";
 
 export default function CustomerList({
   data,
