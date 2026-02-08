@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import HeaderWeb from "./components/Header";
-import TabsWeb from "./components/Tabs";
-import AddCustomerWeb from "./components/AddCustomer";
-import BulkUpdateWeb from "./components/BulkUpdate";
-import CustomerListWeb from "./components/CustomerList";
-import StatusAlertWeb from "./components/StatusAlert";
+import Header from "./components/Header";
+import Tabs from "./components/Tabs";
+import AddCustomer from "./components/AddCustomer";
+import BulkUpdate from "./components/BulkUpdate";
+import CustomerList from "./components/CustomerList";
+import StatusAlert from "./components/StatusAlert";
 import {
   loadCustomers,
   saveCustomers as saveToStorage,
 } from "./utils/localStorage";
 import { parseBulkUpdates } from "./utils/bulkParser";
-import { styles } from "./styles/webStyles";
+import { Styles } from "./styles/Styles.web";
+import { View } from "react-native";
 
 const App = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -22,8 +23,12 @@ const App = () => {
   const [updateStatus, setUpdateStatus] = useState("");
 
   useEffect(() => {
-    const stored = loadCustomers();
-    setCustomers(stored);
+    const fetchCustomers = async () => {
+      const stored = await loadCustomers();
+      setCustomers(Array.isArray(stored) ? stored : []);
+    };
+
+    fetchCustomers();
   }, []);
 
   const saveCustomers = (next) => {
@@ -120,22 +125,23 @@ const App = () => {
     return filtered;
   };
 
-  const totalBalance = customers.reduce((sum, c) => sum + c.balance, 0);
+  const totalBalance =
+    customers && customers.reduce((sum, c) => sum + c.balance, 0);
   const todayBalance = getTodayTransactions().reduce(
     (sum, c) => sum + c.todayTotal,
     0,
   );
 
   return (
-    <div style={styles.container}>
-      <HeaderWeb totalBalance={totalBalance} todayBalance={todayBalance} />
-      <TabsWeb activeTab={activeTab} setActiveTab={setActiveTab} />
+    <View style={Styles.container}>
+      <Header totalBalance={totalBalance} todayBalance={todayBalance} />
+      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div style={styles.content}>
-        <StatusAlertWeb updateStatus={updateStatus} />
+      <View style={Styles.content}>
+        <StatusAlert updateStatus={updateStatus} />
 
         {activeTab === 0 && (
-          <AddCustomerWeb
+          <AddCustomer
             newCustomer={newCustomer}
             setNewCustomer={setNewCustomer}
             handleAddCustomer={handleAddCustomer}
@@ -143,7 +149,7 @@ const App = () => {
         )}
 
         {activeTab === 1 && (
-          <BulkUpdateWeb
+          <BulkUpdate
             bulkUpdates={bulkUpdates}
             setBulkUpdates={setBulkUpdates}
             handleBulkUpdate={handleBulkUpdate}
@@ -151,7 +157,7 @@ const App = () => {
         )}
 
         {activeTab === 2 && (
-          <CustomerListWeb
+          <CustomerList
             filteredCustomers={
               filterDate === "today"
                 ? getTodayTransactions().filter((c) => c.todayTotal !== 0)
@@ -163,8 +169,8 @@ const App = () => {
             setFilterDate={setFilterDate}
           />
         )}
-      </div>
-    </div>
+      </View>
+    </View>
   );
 };
 

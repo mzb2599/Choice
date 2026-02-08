@@ -1,4 +1,4 @@
-export const styles = {
+export const Styles = {
   container: {
     minHeight: "100vh",
     background: "#f8f9fa",
@@ -45,7 +45,7 @@ export const styles = {
     minWidth: "140px",
   },
   balanceLabel: {
-    fontSize: "13px",
+    fontSize: 13,
     color: "#6c757d",
     marginBottom: "4px",
     fontWeight: "500",
@@ -53,7 +53,7 @@ export const styles = {
     letterSpacing: "0.5px",
   },
   balanceAmount: {
-    fontSize: "24px",
+    fontSize: 24,
     fontWeight: "700",
     color: "#212529",
   },
@@ -75,7 +75,7 @@ export const styles = {
     background: "transparent",
     cursor: "pointer",
     fontWeight: "500",
-    fontSize: "15px",
+    fontSize: 15,
     color: "#6c757d",
     borderBottom: "3px solid transparent",
     transition: "all 0.2s",
@@ -110,7 +110,7 @@ export const styles = {
     display: "block",
     marginBottom: "8px",
     fontWeight: "600",
-    fontSize: "14px",
+    fontSize: 14,
     color: "#212529",
   },
   input: {
@@ -118,7 +118,7 @@ export const styles = {
     padding: "12px 16px",
     border: "1px solid #dee2e6",
     borderRadius: "6px",
-    fontSize: "15px",
+    fontSize: 15,
     transition: "all 0.2s",
     outline: "none",
     backgroundColor: "#fff",
@@ -128,7 +128,7 @@ export const styles = {
     padding: "14px 24px",
     border: "none",
     borderRadius: "6px",
-    fontSize: "15px",
+    fontSize: 15,
     fontWeight: "600",
     cursor: "pointer",
     display: "flex",
@@ -151,7 +151,7 @@ export const styles = {
     padding: "12px 16px",
     border: "1px solid #dee2e6",
     borderRadius: "6px",
-    fontSize: "14px",
+    fontSize: 14,
     fontFamily:
       '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
     resize: "vertical",
@@ -188,7 +188,7 @@ export const styles = {
     padding: "14px 16px",
     textAlign: "left",
     fontWeight: "600",
-    fontSize: "13px",
+    fontSize: 13,
     color: "#495057",
     borderBottom: "2px solid #dee2e6",
     textTransform: "uppercase",
@@ -197,7 +197,7 @@ export const styles = {
   td: {
     padding: "16px",
     borderBottom: "1px solid #e9ecef",
-    fontSize: "15px",
+    fontSize: 15,
     color: "#212529",
   },
   chip: {
@@ -206,7 +206,7 @@ export const styles = {
     gap: "6px",
     padding: "6px 14px",
     borderRadius: "20px",
-    fontSize: "13px",
+    fontSize: 13,
     fontWeight: "600",
   },
   chipSuccess: {
@@ -230,4 +230,4 @@ export const styles = {
   },
 };
 
-export default styles;
+export default Styles;

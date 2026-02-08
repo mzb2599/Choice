@@ -1,7 +1,10 @@
-export const loadCustomers = () => {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const KEY = "customers";
+
+export const loadCustomers = async () => {
   try {
-    const stored =
-      typeof window !== "undefined" && localStorage.getItem("customers");
+    const stored = await AsyncStorage.getItem(KEY);
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error("Error loading customers:", error);
@@ -9,11 +12,9 @@ export const loadCustomers = () => {
   }
 };
 
-export const saveCustomers = (customers) => {
+export const saveCustomers = async (customers) => {
   try {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("customers", JSON.stringify(customers));
-    }
+    await AsyncStorage.setItem(KEY, JSON.stringify(customers));
   } catch (error) {
     console.error("Error saving customers:", error);
   }

@@ -1,13 +1,14 @@
 import React from "react";
-import { Save } from "lucide-react";
-import { styles } from "../styles/webStyles";
+import { View, Text } from "react-native";
+import { Save } from "lucide-react-native";
+import { Styles } from "../styles/appStyles";
 
-export default function StatusAlertWeb({ updateStatus }) {
+export default function StatusAlert({ updateStatus }) {
   if (!updateStatus || updateStatus === "error") return null;
   return (
-    <div style={styles.alert}>
-      <Save size={20} />
-      <span>{updateStatus}</span>
-    </div>
+    <View style={Styles.alert}>
+      <Save size={18} color="#0f5132" />
+      <Text>{updateStatus}</Text>
+    </View>
   );
 }

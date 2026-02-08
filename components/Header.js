@@ -1,50 +1,42 @@
 import React from "react";
-import { DollarSign } from "lucide-react";
-import { styles } from "../styles/webStyles";
+import { View, Text } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { IndianRupee } from "lucide-react-native";
+import { Styles } from "../styles/appStyles";
 
-export default function HeaderWeb({ totalBalance, todayBalance }) {
+export default function Header({ totalBalance, todayBalance }) {
   return (
-    <div style={styles.header}>
-      <div style={styles.headerContent}>
-        <div style={styles.headerTitle}>
-          <div style={styles.iconBox}>
-            <DollarSign size={28} color="white" />
-          </div>
-          <div>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: "22px",
-                fontWeight: "700",
-                color: "#212529",
-              }}
-            >
-              Credit Manager Pro
-            </h1>
-            <p
-              style={{
-                margin: "4px 0 0 0",
-                color: "#6c757d",
-                fontSize: "14px",
-                fontWeight: "400",
-              }}
-            >
-              Professional Customer Order Management
-            </p>
-          </div>
-        </div>
+    <LinearGradient colors={["#1e3c72", "#2a5298"]} style={Styles.header}>
+      <View style={Styles.headerContent}>
+        <View style={Styles.headerTitle}>
+          <View
+            style={{
+              backgroundColor: "#0d6efd",
+              padding: 12,
+              borderRadius: 10,
+            }}
+          >
+            <IndianRupee size={28} color="#fff" />
+          </View>
 
-        <div style={styles.balanceCards}>
-          <div style={styles.balanceCard}>
-            <div style={styles.balanceLabel}>Total Balance</div>
-            <div style={styles.balanceAmount}>₹{totalBalance.toFixed(2)}</div>
-          </div>
-          <div style={styles.balanceCard}>
-            <div style={styles.balanceLabel}>Today's Total</div>
-            <div style={styles.balanceAmount}>₹{todayBalance.toFixed(2)}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+          <View>
+            <Text style={Styles.headerH1}>Choice Kirana</Text>
+            <Text style={Styles.headerSub}>Customer Order Management</Text>
+          </View>
+        </View>
+
+        <View style={Styles.balanceCards}>
+          <View style={Styles.balanceCard}>
+            <Text style={Styles.balanceLabel}>Total Balance</Text>
+            <Text style={Styles.balanceValue}>₹{totalBalance.toFixed(2)}</Text>
+          </View>
+
+          <View style={Styles.balanceCard}>
+            <Text style={Styles.balanceLabel}>Today's Total</Text>
+            <Text style={Styles.balanceValue}>₹{todayBalance.toFixed(2)}</Text>
+          </View>
+        </View>
+      </View>
+    </LinearGradient>
   );
 }

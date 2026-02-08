@@ -1,41 +1,34 @@
 import React from "react";
-import { Plus, TrendingUp, Users } from "lucide-react";
-import { styles } from "../styles/webStyles";
+import { View, TouchableOpacity, Text } from "react-native";
+import { Plus, TrendingUp, Users } from "lucide-react-native";
+import { Styles } from "../styles/appStyles";
 
-export default function TabsWeb({ activeTab, setActiveTab }) {
+export default function Tabs({ activeTab, setActiveTab }) {
   return (
-    <div style={styles.tabs}>
-      <div style={styles.tabsContainer}>
-        <button
-          onClick={() => setActiveTab(0)}
-          style={{
-            ...styles.tab,
-            ...(activeTab === 0 ? styles.tabActive : {}),
-          }}
-        >
-          <Plus size={18} /> Add Customer
-        </button>
+    <View style={Styles.tabsContainer}>
+      <TouchableOpacity
+        style={[Styles.tab, activeTab === 0 ? Styles.tabActive : null]}
+        onPress={() => setActiveTab(0)}
+      >
+        <Plus size={18} color={activeTab === 0 ? "#2a5298" : "#6c757d"} />
+        <Text style={Styles.tabText}>Add Customer</Text>
+      </TouchableOpacity>
 
-        <button
-          onClick={() => setActiveTab(1)}
-          style={{
-            ...styles.tab,
-            ...(activeTab === 1 ? styles.tabActive : {}),
-          }}
-        >
-          <TrendingUp size={18} /> Bulk Update
-        </button>
+      <TouchableOpacity
+        style={[Styles.tab, activeTab === 1 ? Styles.tabActive : null]}
+        onPress={() => setActiveTab(1)}
+      >
+        <TrendingUp size={18} color={activeTab === 1 ? "#2a5298" : "#6c757d"} />
+        <Text style={Styles.tabText}>Bulk Update</Text>
+      </TouchableOpacity>
 
-        <button
-          onClick={() => setActiveTab(2)}
-          style={{
-            ...styles.tab,
-            ...(activeTab === 2 ? styles.tabActive : {}),
-          }}
-        >
-          <Users size={18} /> View Balances
-        </button>
-      </div>
-    </div>
+      <TouchableOpacity
+        style={[Styles.tab, activeTab === 2 ? Styles.tabActive : null]}
+        onPress={() => setActiveTab(2)}
+      >
+        <Users size={18} color={activeTab === 2 ? "#2a5298" : "#6c757d"} />
+        <Text style={Styles.tabText}>View Balances</Text>
+      </TouchableOpacity>
+    </View>
   );
 }

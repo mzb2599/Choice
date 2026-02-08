@@ -1,73 +1,67 @@
 import React from "react";
-import { Save } from "lucide-react";
-import { styles } from "../styles/webStyles";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { Save } from "lucide-react-native";
+import { Styles } from "../styles/appStyles";
 
-export default function BulkUpdateWeb({
+export default function BulkUpdate({
   bulkUpdates,
   setBulkUpdates,
   handleBulkUpdate,
+  updateStatus,
 }) {
   return (
-    <div style={styles.paper}>
-      <h2
+    <View style={Styles.card}>
+      <Text style={Styles.title}>Bulk Credit Update</Text>
+      <Text style={{ color: "#6c757d", marginBottom: 12 }}>
+        Enter updates in the format: CustomerName Amount received/credit
+      </Text>
+
+      <View
         style={{
-          marginTop: 0,
-          marginBottom: "8px",
-          fontSize: "20px",
-          fontWeight: "700",
-          color: "#212529",
+          backgroundColor: "#eef6ff",
+          padding: 12,
+          borderRadius: 8,
+          marginBottom: 12,
         }}
       >
-        Bulk Credit Update
-      </h2>
-      <p style={{ color: "#6c757d", marginBottom: "24px", fontSize: "14px" }}>
-        Enter updates in the format: CustomerName Amount received/credit
-      </p>
-
-      <div style={styles.infoBox}>
-        <p
-          style={{
-            fontWeight: "600",
-            margin: "0 0 12px 0",
-            fontSize: "14px",
-            color: "#084298",
-          }}
-        >
+        <Text style={{ fontWeight: "600", color: "#084298" }}>
           Example Format:
-        </p>
-        <pre
-          style={{
-            margin: 0,
-            fontFamily: '"SF Mono", Monaco, monospace',
-            fontSize: "13px",
-            color: "#084298",
-            lineHeight: "1.6",
-          }}
+        </Text>
+        <Text
+          style={{ fontFamily: "monospace", color: "#084298", marginTop: 6 }}
         >
-          Customer1 500 received{"\n"}Customer2 400 credit{"\n"}Customer3 1200
-          received
-        </pre>
-        <p style={{ fontSize: "12px", color: "#6c757d", margin: "12px 0 0 0" }}>
+          {
+            "Customer1 500 received\nCustomer2 400 credit\nCustomer3 1200 received"
+          }
+        </Text>
+        <Text style={{ color: "#6c757d", marginTop: 8, fontSize: 12 }}>
           💡 Tip: Press Ctrl+Enter to quickly save all updates
-        </p>
-      </div>
+        </Text>
+      </View>
 
-      <textarea
+      <TextInput
         value={bulkUpdates}
-        onChange={(e) => setBulkUpdates(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && e.ctrlKey && handleBulkUpdate()}
-        style={{ ...styles.textarea, height: "320px", marginBottom: "16px" }}
+        onChangeText={(t) => setBulkUpdates(t)}
+        style={Styles.textarea}
+        multiline
         placeholder={
           "Customer1 500 received\nCustomer2 400 credit\nCustomer3 1200 received"
         }
       />
 
-      <button
-        onClick={handleBulkUpdate}
-        style={{ ...styles.button, ...styles.buttonSuccess }}
+      <TouchableOpacity
+        style={[Styles.button, Styles.buttonSuccess]}
+        onPress={handleBulkUpdate}
       >
-        <Save size={20} /> Update All Records
-      </button>
-    </div>
+        <Save size={20} color="#fff" />
+        <Text style={Styles.buttonText}>Update All Records</Text>
+      </TouchableOpacity>
+
+      {updateStatus && updateStatus !== "error" && (
+        <View style={{ marginTop: 12 }}>
+          <Text style={{ color: "#0f5132" }}>{updateStatus}</Text>
+        </View>
+      )}
+    </View>
   );
 }

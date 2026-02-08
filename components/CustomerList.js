@@ -1,133 +1,108 @@
 import React from "react";
-import { Users, TrendingUp, TrendingDown, Search } from "lucide-react";
-import { styles } from "../styles/webStyles";
+import { View, Text, TextInput, FlatList } from "react-native";
+import { Users, TrendingUp, TrendingDown } from "lucide-react-native";
+import { Styles } from "../styles/Styles.web";
 
-export default function CustomerListWeb({
-  filteredCustomers,
+export default function CustomerList({
+  data,
   searchTerm,
   setSearchTerm,
   filterDate,
   setFilterDate,
 }) {
   return (
-    <div>
-      <div
-        style={{ ...styles.paper, marginBottom: "24px", padding: "20px 24px" }}
-      >
-        <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-          <div style={styles.searchContainer}>
-            <Search size={18} style={styles.searchIcon} />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ ...styles.input, paddingLeft: "44px" }}
+    <View>
+      <View style={{ ...Styles.paper, marginBottom: 12 }}>
+        <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
+          <View style={{ flex: 1 }}>
+            <TextInput
               placeholder="Search by name or phone..."
+              value={searchTerm}
+              onChangeText={(t) => setSearchTerm(t)}
+              style={{ ...Styles.input, paddingLeft: 12 }}
             />
-          </div>
-          <select
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            style={{ ...styles.input, width: "auto", minWidth: "180px" }}
-          >
-            <option value="all">All Time</option>
-            <option value="today">Today Only</option>
-          </select>
-        </div>
-      </div>
+          </View>
 
-      <div style={styles.paper}>
-        {filteredCustomers.length === 0 ? (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "80px 20px",
-              color: "#6c757d",
-            }}
-          >
-            <Users size={56} style={{ marginBottom: "16px", opacity: 0.5 }} />
-            <p style={{ fontSize: "18px", fontWeight: "500", margin: 0 }}>
+          <Text style={{ marginLeft: 12 }}>Filter:</Text>
+          <View style={{ width: 140 }}>
+            <Text
+              onPress={() => setFilterDate("all")}
+              style={{
+                padding: 6,
+                backgroundColor:
+                  filterDate === "all" ? "#eef3ff" : "transparent",
+                borderRadius: 6,
+              }}
+            >
+              All Time
+            </Text>
+            <Text
+              onPress={() => setFilterDate("today")}
+              style={{
+                padding: 6,
+                backgroundColor:
+                  filterDate === "today" ? "#eef3ff" : "transparent",
+                borderRadius: 6,
+              }}
+            >
+              Today Only
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={Styles.paper}>
+        {data && data.length === 0 ? (
+          <View style={{ alignItems: "center", padding: 40 }}>
+            <Users size={56} color="#6c757d" />
+            <Text style={{ fontSize: 18, marginTop: 8 }}>
               No customers found
-            </p>
-            <p style={{ fontSize: "14px", margin: "8px 0 0 0" }}>
+            </Text>
+            <Text style={{ color: "#6c757d" }}>
               Add customers to get started
-            </p>
-          </div>
+            </Text>
+          </View>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>Customer</th>
-                  <th style={styles.th}>Phone</th>
-                  <th style={{ ...styles.th, textAlign: "right" }}>
-                    Total Balance
-                  </th>
-                  {filterDate === "today" && (
-                    <th style={{ ...styles.th, textAlign: "right" }}>
-                      Today's Total
-                    </th>
+          <FlatList
+            data={data}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  paddingVertical: 12,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#eee",
+                }}
+              >
+                <Text style={{ fontWeight: "600" }}>{item.name}</Text>
+                <Text style={{ color: "#6c757d" }}>{item.phone}</Text>
+                <Text
+                  style={{
+                    fontWeight: "700",
+                    textAlign: "right",
+                    color: item.balance >= 0 ? "#198754" : "#dc3545",
+                  }}
+                >
+                  ₹{Math.abs(item.balance).toFixed(2)}
+                </Text>
+                <View style={{ marginTop: 8 }}>
+                  {item.balance >= 0 ? (
+                    <View style={[Styles.chip, Styles.chipSuccess]}>
+                      <TrendingUp size={14} />
+                      <Text> Received</Text>
+                    </View>
+                  ) : (
+                    <View style={[Styles.chip, Styles.chipError]}>
+                      <TrendingDown size={14} />
+                      <Text> Credit</Text>
+                    </View>
                   )}
-                  <th style={{ ...styles.th, textAlign: "center" }}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCustomers.map((customer) => (
-                  <tr
-                    key={customer.id}
-                    style={{ transition: "background 0.15s" }}
-                  >
-                    <td style={styles.td}>
-                      <div style={{ fontWeight: "600", color: "#212529" }}>
-                        {customer.name}
-                      </div>
-                    </td>
-                    <td style={{ ...styles.td, color: "#6c757d" }}>
-                      {customer.phone}
-                    </td>
-                    <td style={{ ...styles.td, textAlign: "right" }}>
-                      <span
-                        style={{
-                          fontWeight: "700",
-                          fontSize: "16px",
-                          color: customer.balance >= 0 ? "#198754" : "#dc3545",
-                        }}
-                      >
-                        ₹{Math.abs(customer.balance).toFixed(2)}
-                      </span>
-                    </td>
-                    {filterDate === "today" && (
-                      <td style={{ ...styles.td, textAlign: "right" }}>
-                        <span
-                          style={{
-                            fontWeight: "700",
-                            fontSize: "16px",
-                            color:
-                              customer.todayTotal >= 0 ? "#198754" : "#dc3545",
-                          }}
-                        >
-                          ₹{Math.abs(customer.todayTotal).toFixed(2)}
-                        </span>
-                      </td>
-                    )}
-                    <td style={{ ...styles.td, textAlign: "center" }}>
-                      {customer.balance >= 0 ? (
-                        <span style={{ ...styles.chip, ...styles.chipSuccess }}>
-                          <TrendingUp size={14} /> Received
-                        </span>
-                      ) : (
-                        <span style={{ ...styles.chip, ...styles.chipError }}>
-                          <TrendingDown size={14} /> Credit
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </View>
+              </View>
+            )}
+          />
         )}
-      </div>
-    </div>
+      </View>
+    </View>
   );
 }
