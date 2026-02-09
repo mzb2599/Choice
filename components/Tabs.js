@@ -29,6 +29,13 @@ export default function Tabs({ activeTab, setActiveTab }) {
         <Users size={18} color={activeTab === 2 ? "#2a5298" : "#6c757d"} />
         <Text style={Styles.tabText}>View Balances</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[Styles.tab, activeTab === 3 ? Styles.tabActive : null]}
+        onPress={() => setActiveTab(3)} 
+      >
+        <Text style={Styles.tabText}>Product catalog</Text>
+      </TouchableOpacity>
     </View>
   );
 }
