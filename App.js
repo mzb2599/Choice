@@ -5,6 +5,7 @@ import AddCustomer from "./components/AddCustomer";
 import BulkUpdate from "./components/BulkUpdate";
 import CustomerList from "./components/CustomerList";
 import StatusAlert from "./components/StatusAlert";
+import ProductCatalog from "./components/ProductCatalog";
 import {
   loadCustomers,
   saveCustomers as saveToStorage,
@@ -168,6 +169,10 @@ const App = () => {
             filterDate={filterDate}
             setFilterDate={setFilterDate}
           />
+        )}
+
+        {activeTab === 3 && (
+         <ProductCatalog />
         )}
       </View>
     </View>
