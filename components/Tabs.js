@@ -32,7 +32,7 @@ export default function Tabs({ activeTab, setActiveTab }) {
 
       <TouchableOpacity
         style={[Styles.tab, activeTab === 3 ? Styles.tabActive : null]}
-        onPress={() => setActiveTab(3)} 
+        onPress={() => setActiveTab(3)}
       >
         <Text style={Styles.tabText}>Product catalog</Text>
       </TouchableOpacity>
