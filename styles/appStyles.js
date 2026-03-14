@@ -17,7 +17,7 @@ export const Styles = StyleSheet.create({
 
   headerContent: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
     flexWrap: "wrap",
   },
@@ -25,6 +25,13 @@ export const Styles = StyleSheet.create({
   headerTitle: {
     flexDirection: "row",
     alignItems: "center",
+    marginLeft: 12,
+  },
+
+  menuButton: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: "rgba(255,255,255,0.18)",
   },
 
   headerIcon: {
@@ -76,6 +83,40 @@ export const Styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 8,
     overflow: "hidden",
+  },
+
+  menuOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.35)",
+  },
+
+  menuContainer: {
+    position: "absolute",
+    top: 60,
+    left: 20,
+    width: 220,
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    paddingVertical: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+
+  menuItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+
+  menuItemActive: {
+    backgroundColor: "rgba(102,126,234,0.12)",
+  },
+
+  menuItemText: {
+    fontSize: 15,
+    fontWeight: "500",
   },
 
   tab: {

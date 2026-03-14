@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
-import Tabs from "./components/Tabs";
 import AddCustomer from "./components/AddCustomer";
 import BulkUpdate from "./components/BulkUpdate";
 import CustomerList from "./components/CustomerList";
+import CustomerOrders from "./components/CustomerOrders";
 import StatusAlert from "./components/StatusAlert";
 import ProductCatalog from "./components/ProductCatalog";
 import {
@@ -108,6 +108,10 @@ const App = () => {
     });
   };
 
+  const handleNavigate = (tabIndex) => {
+    setActiveTab(tabIndex);
+  };
+
   const filteredCustomers = () => {
     let filtered = customers;
 
@@ -133,10 +137,22 @@ const App = () => {
     0,
   );
 
+  const getAllTransactions = () =>
+    customers.flatMap((customer) =>
+      customer.transactions.map((t) => ({
+        ...t,
+        customerName: customer.name,
+      })),
+    );
+
   return (
     <View style={Styles.container}>
-      <Header totalBalance={totalBalance} todayBalance={todayBalance} />
-      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Header
+        totalBalance={totalBalance}
+        todayBalance={todayBalance}
+        activeTab={activeTab}
+        onNavigate={handleNavigate}
+      />
 
       <View style={Styles.content}>
         <StatusAlert updateStatus={updateStatus} />
@@ -159,7 +175,7 @@ const App = () => {
 
         {activeTab === 2 && (
           <CustomerList
-            filteredCustomers={
+            data={
               filterDate === "today"
                 ? getTodayTransactions().filter((c) => c.todayTotal !== 0)
                 : filteredCustomers()
@@ -172,8 +188,10 @@ const App = () => {
         )}
 
         {activeTab === 3 && (
-         <ProductCatalog />
+          <CustomerOrders transactions={getAllTransactions()} />
         )}
+
+        {activeTab === 4 && <ProductCatalog />}
       </View>
     </View>
   );
