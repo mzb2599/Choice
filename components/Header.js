@@ -6,16 +6,10 @@ import { Styles } from "../styles/appStyles";
 
 export default function Header({ totalBalance, todayBalance }) {
   return (
-    <LinearGradient colors={["#1e3c72", "#2a5298"]} style={Styles.header}>
+    <LinearGradient colors={["#667eea", "#764ba2"]} style={Styles.header}>
       <View style={Styles.headerContent}>
         <View style={Styles.headerTitle}>
-          <View
-            style={{
-              backgroundColor: "#0d6efd",
-              padding: 12,
-              borderRadius: 10,
-            }}
-          >
+          <View style={Styles.headerIcon}>
             <IndianRupee size={28} color="#fff" />
           </View>
 

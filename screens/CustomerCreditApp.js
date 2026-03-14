@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import Header from "../components/Header";
@@ -82,7 +82,7 @@ const CustomerCreditApp = () => {
 
     const updatedCustomers = customers.map((customer) => {
       const update = updates.find((u) =>
-        customer.name.toLowerCase().includes(u.name.toLowerCase())
+        customer.name.toLowerCase().includes(u.name.toLowerCase()),
       );
 
       if (update) {
@@ -118,12 +118,12 @@ const CustomerCreditApp = () => {
 
     return customers.map((customer) => {
       const todayTrans = customer.transactions.filter(
-        (t) => new Date(t.date).toDateString() === today
+        (t) => new Date(t.date).toDateString() === today,
       );
 
       const total = todayTrans.reduce(
         (sum, t) => sum + (t.type === "received" ? t.amount : -t.amount),
-        0
+        0,
       );
 
       return { ...customer, todayTotal: total };
@@ -131,12 +131,12 @@ const CustomerCreditApp = () => {
   };
 
   const filteredCustomers = () => {
-    let data = customers;    
+    let data = customers;
     if (searchTerm)
       data = data.filter(
         (c) =>
           c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          c.phone.includes(searchTerm)
+          c.phone.includes(searchTerm),
       );
 
     if (filterDate === "today") {
@@ -149,7 +149,7 @@ const CustomerCreditApp = () => {
   const totalBalance = customers.reduce((sum, c) => sum + c.balance, 0);
   const todayBalance = getTodaySummary().reduce(
     (sum, c) => sum + c.todayTotal,
-    0
+    0,
   );
 
   return (
@@ -158,6 +158,7 @@ const CustomerCreditApp = () => {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
+        <Header totalBalance={totalBalance} todayBalance={todayBalance} />
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {activeTab === 0 && (
@@ -180,7 +181,9 @@ const CustomerCreditApp = () => {
 
         {activeTab === 2 && (
           <CustomerList
-            data={filteredCustomers().length>0 ? filteredCustomers() : customers}
+            data={
+              filteredCustomers().length > 0 ? filteredCustomers() : customers
+            }
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             filterDate={filterDate}

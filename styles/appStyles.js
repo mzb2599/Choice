@@ -3,7 +3,17 @@ import { StyleSheet } from "react-native";
 export const Styles = StyleSheet.create({
   scroll: { padding: 16 },
 
-  header: { padding: 24 },
+  header: {
+    padding: 24,
+    borderRadius: 18,
+    overflow: "hidden",
+    // subtle shadow for native platforms
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 14,
+    elevation: 9,
+  },
 
   headerContent: {
     flexDirection: "row",
@@ -17,29 +27,47 @@ export const Styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  headerIcon: {
+    backgroundColor: "#0d6efd",
+    padding: 12,
+    borderRadius: 12,
+    marginRight: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   headerH1: { color: "#fff", fontSize: 24, fontWeight: "bold" },
   headerSub: { color: "#fff", fontSize: 14, opacity: 0.8 },
 
   balanceCards: {
     flexDirection: "row",
     flexWrap: "wrap",
+    marginTop: 12,
   },
 
   balanceCard: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-    padding: 6,
-    borderRadius: 8,
+    backgroundColor: "rgba(255,255,255,0.18)",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 12,
     marginRight: 6,
     marginBottom: 6,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.25)",
+    minWidth: 160,
   },
 
-  balanceLabel: { color: "#fff", fontSize: 12 },
+  balanceLabel: {
+    color: "rgba(255,255,255,0.85)",
+    fontSize: 12,
+    marginBottom: 4,
+  },
 
   balanceValue: {
     color: "#fff",
     fontSize: 20,
-    fontWeight: "bold",
-    minWidth: 150,
+    fontWeight: "600",
+    letterSpacing: 0.15,
   },
 
   tabsContainer: {
