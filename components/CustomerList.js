@@ -10,6 +10,7 @@ export default function CustomerList({
   filterDate,
   setFilterDate,
 }) {
+  console.log("Rendering CustomerList with data:", data);
   return (
     <View>
       <View style={{ ...Styles.paper, marginBottom: 12 }}>
@@ -21,32 +22,6 @@ export default function CustomerList({
               onChangeText={(t) => setSearchTerm(t)}
               style={{ ...Styles.input, paddingLeft: 12 }}
             />
-          </View>
-
-          <Text style={{ marginLeft: 12 }}>Filter:</Text>
-          <View style={{ width: 140 }}>
-            <Text
-              onPress={() => setFilterDate("all")}
-              style={{
-                padding: 6,
-                backgroundColor:
-                  filterDate === "all" ? "#eef3ff" : "transparent",
-                borderRadius: 6,
-              }}
-            >
-              All Time
-            </Text>
-            <Text
-              onPress={() => setFilterDate("today")}
-              style={{
-                padding: 6,
-                backgroundColor:
-                  filterDate === "today" ? "#eef3ff" : "transparent",
-                borderRadius: 6,
-              }}
-            >
-              Today Only
-            </Text>
           </View>
         </View>
       </View>
@@ -72,6 +47,9 @@ export default function CustomerList({
                   paddingVertical: 12,
                   borderBottomWidth: 1,
                   borderBottomColor: "#eee",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
               >
                 <Text style={{ fontWeight: "600" }}>{item.name}</Text>
@@ -85,19 +63,7 @@ export default function CustomerList({
                 >
                   ₹{Math.abs(item.balance).toFixed(2)}
                 </Text>
-                <View style={{ marginTop: 8 }}>
-                  {item.balance >= 0 ? (
-                    <View style={[Styles.chip, Styles.chipSuccess]}>
-                      <TrendingUp size={14} />
-                      <Text> Received</Text>
-                    </View>
-                  ) : (
-                    <View style={[Styles.chip, Styles.chipError]}>
-                      <TrendingDown size={14} />
-                      <Text> Credit</Text>
-                    </View>
-                  )}
-                </View>
+               
               </View>
             )}
           />

@@ -3,7 +3,6 @@ import { KeyboardAvoidingView, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import Header from "../components/Header";
-import Tabs from "../components/Tabs";
 import TabAddCustomer from "../components/AddCustomer";
 import TabBulkUpdate from "../components/BulkUpdate";
 import CustomerList from "../components/CustomerList";
@@ -152,14 +151,22 @@ const CustomerCreditApp = () => {
     0,
   );
 
+  const handleNavigate = (tabIndex) => {
+    setActiveTab(tabIndex);
+  };
+
   return (
     <LinearGradient colors={["#667eea", "#764ba2"]} style={{ flex: 1 }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <Header totalBalance={totalBalance} todayBalance={todayBalance} />
-        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Header
+          totalBalance={totalBalance}
+          todayBalance={todayBalance}
+          activeTab={activeTab}
+          onNavigate={handleNavigate}
+        />
 
         {activeTab === 0 && (
           <TabAddCustomer
