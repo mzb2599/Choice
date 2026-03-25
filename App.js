@@ -6,6 +6,7 @@ import CustomerList from "./components/CustomerList";
 import CustomerOrders from "./components/CustomerOrders";
 import StatusAlert from "./components/StatusAlert";
 import ProductCatalog from "./components/ProductCatalog";
+import ProductListPage from "./components/ProductListPage";
 import {
   loadCustomers,
   saveCustomers as saveToStorage,
@@ -192,6 +193,7 @@ const App = () => {
         )}
 
         {activeTab === 4 && <ProductCatalog />}
+        {activeTab === 5 && <ProductListPage />}
       </View>
     </View>
   );

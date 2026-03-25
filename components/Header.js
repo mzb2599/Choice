@@ -16,6 +16,7 @@ const menuItems = [
   { label: "Customers", index: 2 },
   { label: "Orders", index: 3 },
   { label: "Product Catalog", index: 4 },
+  { label: "Product List", index: 5 },
 ];
 
 export default function Header({

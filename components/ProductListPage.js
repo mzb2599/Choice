@@ -8,45 +8,17 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { Plus, Package, Trash2, Search } from "lucide-react-native";
+import { Package, Trash2, Search } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Styles } from "../styles/Styles";
 
 const STORAGE_KEY = "products";
 
-const ProductForm = ({ newItem, setNewItem, onAddItem }) => (
-  <View style={[Styles.paper, localStyles.formContainer]}>
-    <Text style={localStyles.title}>Add New Product</Text>
-
-    <Text style={localStyles.label}>Product Name</Text>
-    <TextInput
-      style={Styles.input}
-      placeholder="Enter product name"
-      value={newItem.name}
-      onChangeText={(t) => setNewItem({ ...newItem, name: t })}
-    />
-
-    <Text style={[localStyles.label, { marginTop: 12 }]}>Price (₹)</Text>
-    <TextInput
-      style={Styles.input}
-      placeholder="Enter price"
-      value={String(newItem.price)}
-      onChangeText={(t) => setNewItem({ ...newItem, price: t })}
-      keyboardType="numeric"
-    />
-
-    <TouchableOpacity style={[localStyles.addButton]} onPress={onAddItem}>
-      <Plus size={18} color="#fff" />
-      <Text style={localStyles.addButtonText}>Add Product</Text>
-    </TouchableOpacity>
-  </View>
-);
-
 const EmptyState = () => (
   <View style={localStyles.emptyContainer}>
     <Package size={48} color="#6c757d" />
     <Text style={localStyles.emptyTitle}>No products found</Text>
-    <Text style={localStyles.emptySub}>Add products to build your catalog</Text>
+    <Text style={localStyles.emptySub}>Add products in Product Catalog</Text>
   </View>
 );
 
@@ -55,9 +27,7 @@ const ProductRow = ({ item, onDelete }) => (
     <View style={{ flex: 1 }}>
       <Text style={localStyles.rowTitle}>{item.name}</Text>
     </View>
-
     <Text style={localStyles.price}>₹{Number(item.price).toFixed(2)}</Text>
-
     <TouchableOpacity
       style={localStyles.deleteBtn}
       onPress={() => onDelete(item.id)}
@@ -68,9 +38,8 @@ const ProductRow = ({ item, onDelete }) => (
   </View>
 );
 
-const ProductCatalog = () => {
+const ProductListPage = () => {
   const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState({ name: "", price: "" });
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -78,7 +47,6 @@ const ProductCatalog = () => {
       try {
         const json = await AsyncStorage.getItem(STORAGE_KEY);
         const parsed = json ? JSON.parse(json) : [];
-        // Ensure price is numeric
         const normalized = parsed.map((p) => ({
           ...p,
           price: Number(p.price),
@@ -99,23 +67,6 @@ const ProductCatalog = () => {
     } catch (err) {
       console.error("Error saving products:", err);
     }
-  };
-
-  const handleAddItem = () => {
-    const trimmed = newItem.name.trim();
-    const price = parseFloat(newItem.price);
-    if (!trimmed) {
-      Alert.alert("Validation", "Please enter a product name.");
-      return;
-    }
-    if (isNaN(price) || price < 0) {
-      Alert.alert("Validation", "Please enter a valid price (0 or greater).");
-      return;
-    }
-
-    const item = { id: Date.now().toString(), name: trimmed, price };
-    saveItems([...items, item]);
-    setNewItem({ name: "", price: "" });
   };
 
   const handleDelete = (id) => {
@@ -139,51 +90,42 @@ const ProductCatalog = () => {
 
   return (
     <View>
-      <ProductForm
-        newItem={newItem}
-        setNewItem={setNewItem}
-        onAddItem={handleAddItem}
-      />
-
-      <View style={[Styles.paper, { marginTop: 16, padding: 14 }]}>
-        <Text style={{ fontSize: 14, color: "#495057" }}>
-          Product list has been moved to a separate page. Please open the
-          "Product List" tab to view and manage products.
+      <View style={[Styles.paper, { marginBottom: 12 }]}>
+        <Text style={localStyles.listTitle}>
+          Product List ({filtered.length})
         </Text>
+      </View>
+
+      <View style={[Styles.paper, { marginBottom: 12 }]}>
+        <View style={localStyles.searchBox}>
+          <Search size={16} color="#6c757d" />
+          <TextInput
+            style={[Styles.input, { marginLeft: 8, flex: 1 }]}
+            placeholder="Search products..."
+            value={search}
+            onChangeText={setSearch}
+          />
+        </View>
+      </View>
+
+      <View style={[Styles.paper]}>
+        {filtered.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <FlatList
+            data={filtered}
+            keyExtractor={(i) => i.id}
+            renderItem={({ item }) => (
+              <ProductRow item={item} onDelete={handleDelete} />
+            )}
+          />
+        )}
       </View>
     </View>
   );
 };
 
 const localStyles = StyleSheet.create({
-  formContainer: {
-    paddingBottom: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 12,
-  },
-  label: {
-    marginTop: 6,
-    marginBottom: 6,
-    fontWeight: "600",
-    color: "#212529",
-  },
-  addButton: {
-    marginTop: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 10,
-    backgroundColor: "#0d6efd",
-    borderRadius: 6,
-  },
-  addButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-    marginLeft: 8,
-  },
   emptyContainer: {
     padding: 28,
     alignItems: "center",
@@ -198,12 +140,6 @@ const localStyles = StyleSheet.create({
     color: "#6c757d",
     marginTop: 6,
   },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
   listTitle: {
     fontSize: 16,
     fontWeight: "700",
@@ -211,7 +147,7 @@ const localStyles = StyleSheet.create({
   searchBox: {
     flexDirection: "row",
     alignItems: "center",
-    width: 260,
+    width: "100%",
   },
   row: {
     flexDirection: "row",
@@ -246,4 +182,4 @@ const localStyles = StyleSheet.create({
   },
 });
 
-export default ProductCatalog;
+export default ProductListPage;
