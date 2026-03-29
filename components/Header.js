@@ -17,6 +17,7 @@ const menuItems = [
   { label: "Orders", index: 3 },
   { label: "Product Catalog", index: 4 },
   { label: "Product List", index: 5 },
+  { label: "Backup to Drive", index: 6 },
 ];
 
 export default function Header({

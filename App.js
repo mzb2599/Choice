@@ -7,6 +7,7 @@ import CustomerOrders from "./components/CustomerOrders";
 import StatusAlert from "./components/StatusAlert";
 import ProductCatalog from "./components/ProductCatalog";
 import ProductListPage from "./components/ProductListPage";
+import BackupToDrive from "./components/BackupToDrive";
 import {
   loadCustomers,
   saveCustomers as saveToStorage,
@@ -138,13 +139,13 @@ const App = () => {
     0,
   );
 
-  const getAllTransactions = () =>
-    customers.flatMap((customer) =>
-      customer.transactions.map((t) => ({
-        ...t,
-        customerName: customer.name,
-      })),
-    );
+  const handleDataRestore = (backupData) => {
+    if (backupData.customers) {
+      setCustomers(backupData.customers);
+    }
+    setUpdateStatus("Data restored from backup successfully!");
+    setTimeout(() => setUpdateStatus(""), 3000);
+  };
 
   return (
     <View style={Styles.container}>
@@ -194,6 +195,12 @@ const App = () => {
 
         {activeTab === 4 && <ProductCatalog />}
         {activeTab === 5 && <ProductListPage />}
+        {activeTab === 6 && (
+          <BackupToDrive
+            customers={customers}
+            onDataRestore={handleDataRestore}
+          />
+        )}
       </View>
     </View>
   );
