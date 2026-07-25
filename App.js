@@ -96,6 +96,16 @@ const App = () => {
     setTimeout(() => setUpdateStatus(""), 3000);
   };
 
+  const getAllTransactions = () => {
+    return customers.flatMap((customer) =>
+      (customer.transactions || []).map((transaction) => ({
+        ...transaction,
+        customerName: customer.name,
+        customerId: customer.id,
+      })),
+    );
+  };
+
   const getTodayTransactions = () => {
     const today = new Date().toDateString();
     return customers.map((customer) => {

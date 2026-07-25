@@ -11,9 +11,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kirana.app"
     },
     "android": {
+      "package": "com.kirana.app",
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
@@ -22,6 +24,11 @@
     "web": {},
     "plugins": [
       "expo-status-bar"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "342ac05d-106f-49b5-9a61-8fb237008745"
+      }
+    }
   }
 }
