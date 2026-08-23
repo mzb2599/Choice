@@ -175,6 +175,64 @@ export const Styles = StyleSheet.create({
     fontSize: 14,
   },
 
+  suggestionBox: {
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    marginTop: -8,
+    marginBottom: 12,
+    maxHeight: 180,
+  },
+
+  suggestionItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f1f3f5",
+  },
+
+  suggestionText: {
+    color: "#111827",
+    fontSize: 14,
+  },
+
+  pill: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: "#d0d7de",
+    borderRadius: 999,
+    marginRight: 8,
+    backgroundColor: "#f8f9fa",
+  },
+
+  pillActive: {
+    backgroundColor: "#e8f0fe",
+    borderColor: "#667eea",
+  },
+
+  pillText: {
+    color: "#495057",
+    fontWeight: "600",
+  },
+
+  pillTextActive: {
+    color: "#2a5298",
+  },
+
+  entryItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+
   button: {
     padding: 14,
     borderRadius: 8,

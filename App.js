@@ -22,7 +22,12 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterDate, setFilterDate] = useState("all");
   const [newCustomer, setNewCustomer] = useState({ name: "", phone: "" });
-  const [bulkUpdates, setBulkUpdates] = useState("");
+  const [bulkEntries, setBulkEntries] = useState([]);
+  const [bulkDraft, setBulkDraft] = useState({
+    customerName: "",
+    amount: "",
+    type: "received",
+  });
   const [updateStatus, setUpdateStatus] = useState("");
 
   useEffect(() => {
@@ -55,19 +60,40 @@ const App = () => {
     }
   };
 
+  const handleAddBulkEntry = () => {
+    const amount = Number(bulkDraft.amount);
+    const customerName = bulkDraft.customerName.trim();
+
+    if (!customerName || !Number.isFinite(amount) || amount <= 0) {
+      setUpdateStatus("Please select a customer and enter a valid amount.");
+      setTimeout(() => setUpdateStatus(""), 4000);
+      return;
+    }
+
+    setBulkEntries((prev) => [
+      ...prev,
+      {
+        customerName,
+        amount,
+        type: bulkDraft.type,
+      },
+    ]);
+    setBulkDraft((prev) => ({ ...prev, amount: "", type: "received" }));
+    setUpdateStatus(`Added ${customerName} to the update queue.`);
+    setTimeout(() => setUpdateStatus(""), 2500);
+  };
+
   const handleBulkUpdate = () => {
-    const updates = parseBulkUpdates(bulkUpdates);
+    const updates = parseBulkUpdates(bulkEntries);
     if (updates.length === 0) {
-      setUpdateStatus("error");
+      setUpdateStatus("Please add at least one update before saving.");
       setTimeout(() => setUpdateStatus(""), 4000);
       return;
     }
 
     const updatedCustomers = customers.map((customer) => {
       const update = updates.find(
-        (u) =>
-          customer.name.toLowerCase().includes(u.name.toLowerCase()) ||
-          u.name.toLowerCase().includes(customer.name.toLowerCase()),
+        (u) => customer.name.toLowerCase() === u.name.toLowerCase(),
       );
 
       if (update) {
@@ -91,7 +117,8 @@ const App = () => {
     });
 
     saveCustomers(updatedCustomers);
-    setBulkUpdates("");
+    setBulkEntries([]);
+    setBulkDraft({ customerName: "", amount: "", type: "received" });
     setUpdateStatus(`Successfully updated ${updates.length} customer(s)!`);
     setTimeout(() => setUpdateStatus(""), 3000);
   };
@@ -179,9 +206,14 @@ const App = () => {
 
         {activeTab === 1 && (
           <BulkUpdate
-            bulkUpdates={bulkUpdates}
-            setBulkUpdates={setBulkUpdates}
+            customers={customers}
+            bulkEntries={bulkEntries}
+            setBulkEntries={setBulkEntries}
+            bulkDraft={bulkDraft}
+            setBulkDraft={setBulkDraft}
+            handleAddBulkEntry={handleAddBulkEntry}
             handleBulkUpdate={handleBulkUpdate}
+            updateStatus={updateStatus}
           />
         )}
 
