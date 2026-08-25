@@ -201,6 +201,8 @@ const App = () => {
             newCustomer={newCustomer}
             setNewCustomer={setNewCustomer}
             handleAddCustomer={handleAddCustomer}
+            customers={customers}
+            updateStatus={updateStatus}
           />
         )}
 

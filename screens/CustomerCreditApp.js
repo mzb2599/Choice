@@ -174,6 +174,7 @@ const CustomerCreditApp = () => {
             setNewCustomer={setNewCustomer}
             handleAddCustomer={handleAddCustomer}
             updateStatus={updateStatus}
+            customers={customers}
           />
         )}
 
