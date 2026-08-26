@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { Plus } from "lucide-react-native";
 import { Styles } from "../styles/appStyles";
 
 export default function AddCustomer({
@@ -55,7 +54,9 @@ export default function AddCustomer({
     <View style={Styles.card}>
       {updateStatus && updateStatus !== "error" && (
         <View style={Styles.alert}>
-          <Plus size={18} color="#0f5132" />
+          <Text style={{ color: "#0f5132", fontSize: 18, marginRight: 8 }}>
+            +
+          </Text>
           <Text>{updateStatus}</Text>
         </View>
       )}
@@ -90,7 +91,7 @@ export default function AddCustomer({
         onPress={handleSubmit}
         disabled={!newCustomer.name || !newCustomer.phone}
       >
-        <Plus size={20} color="#fff" />
+        <Text style={{ color: "#fff", fontSize: 20, marginRight: 8 }}>+</Text>
         <Text style={Styles.buttonText}>Add Customer</Text>
       </TouchableOpacity>
     </View>

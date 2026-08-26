@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import Header from "../components/Header";
@@ -159,45 +159,52 @@ const CustomerCreditApp = () => {
     <LinearGradient colors={["#667eea", "#764ba2"]} style={{ flex: 1 }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
       >
-        <Header
-          totalBalance={totalBalance}
-          todayBalance={todayBalance}
-          activeTab={activeTab}
-          onNavigate={handleNavigate}
-        />
-
-        {activeTab === 0 && (
-          <TabAddCustomer
-            newCustomer={newCustomer}
-            setNewCustomer={setNewCustomer}
-            handleAddCustomer={handleAddCustomer}
-            updateStatus={updateStatus}
-            customers={customers}
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <Header
+            totalBalance={totalBalance}
+            todayBalance={todayBalance}
+            activeTab={activeTab}
+            onNavigate={handleNavigate}
           />
-        )}
 
-        {activeTab === 1 && (
-          <TabBulkUpdate
-            bulkUpdates={bulkUpdates}
-            setBulkUpdates={setBulkUpdates}
-            handleBulkUpdate={handleBulkUpdate}
-            updateStatus={updateStatus}
-          />
-        )}
+          {activeTab === 0 && (
+            <TabAddCustomer
+              newCustomer={newCustomer}
+              setNewCustomer={setNewCustomer}
+              handleAddCustomer={handleAddCustomer}
+              updateStatus={updateStatus}
+              customers={customers}
+            />
+          )}
 
-        {activeTab === 2 && (
-          <CustomerList
-            data={
-              filteredCustomers().length > 0 ? filteredCustomers() : customers
-            }
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filterDate={filterDate}
-            setFilterDate={setFilterDate}
-          />
-        )}
+          {activeTab === 1 && (
+            <TabBulkUpdate
+              bulkUpdates={bulkUpdates}
+              setBulkUpdates={setBulkUpdates}
+              handleBulkUpdate={handleBulkUpdate}
+              updateStatus={updateStatus}
+            />
+          )}
+
+          {activeTab === 2 && (
+            <CustomerList
+              data={
+                filteredCustomers().length > 0 ? filteredCustomers() : customers
+              }
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              filterDate={filterDate}
+              setFilterDate={setFilterDate}
+            />
+          )}
+        </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>
   );
