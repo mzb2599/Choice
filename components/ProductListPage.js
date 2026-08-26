@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { Package, Trash2, Search } from "lucide-react-native";
+import { Package, Search, Pencil, Check, X } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Styles } from "../styles/Styles";
 
@@ -22,25 +22,55 @@ const EmptyState = () => (
   </View>
 );
 
-const ProductRow = ({ item, onDelete }) => (
+const ProductRow = ({
+  item,
+  isEditing,
+  priceDraft,
+  onEditStart,
+  onEditChange,
+  onEditSave,
+  onEditCancel,
+}) => (
   <View style={localStyles.row}>
     <View style={{ flex: 1 }}>
       <Text style={localStyles.rowTitle}>{item.name}</Text>
     </View>
-    <Text style={localStyles.price}>₹{Number(item.price).toFixed(2)}</Text>
-    <TouchableOpacity
-      style={localStyles.deleteBtn}
-      onPress={() => onDelete(item.id)}
-    >
-      <Trash2 size={14} color="#fff" />
-      <Text style={localStyles.deleteText}>Delete</Text>
-    </TouchableOpacity>
+
+    {isEditing ? (
+      <View style={localStyles.editorWrap}>
+        <TextInput
+          value={priceDraft}
+          onChangeText={onEditChange}
+          keyboardType="decimal-pad"
+          style={localStyles.priceInput}
+          placeholder="0.00"
+          autoFocus
+          onSubmitEditing={onEditSave}
+        />
+        <TouchableOpacity style={localStyles.saveBtn} onPress={onEditSave}>
+          <Check size={14} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity style={localStyles.cancelBtn} onPress={onEditCancel}>
+          <X size={14} color="#fff" />
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <>
+        <Text style={localStyles.price}>₹{Number(item.price).toFixed(2)}</Text>
+        <TouchableOpacity style={localStyles.editBtn} onPress={onEditStart}>
+          <Pencil size={14} color="#fff" />
+          <Text style={localStyles.editText}>Edit Price</Text>
+        </TouchableOpacity>
+      </>
+    )}
   </View>
 );
 
 const ProductListPage = () => {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [priceDraft, setPriceDraft] = useState("");
 
   useEffect(() => {
     const load = async () => {
@@ -69,19 +99,32 @@ const ProductListPage = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    Alert.alert(
-      "Delete product",
-      "Are you sure you want to delete this product?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => saveItems(items.filter((i) => i.id !== id)),
-        },
-      ],
+  const handleEditStart = (item) => {
+    setEditingId(item.id);
+    setPriceDraft(String(item.price));
+  };
+
+  const handleEditSave = () => {
+    if (editingId === null) return;
+
+    const nextPrice = Number(priceDraft);
+    if (!Number.isFinite(nextPrice) || nextPrice < 0) {
+      Alert.alert("Validation", "Please enter a valid price (0 or greater).");
+      return;
+    }
+
+    const nextItems = items.map((item) =>
+      item.id === editingId ? { ...item, price: nextPrice } : item,
     );
+
+    saveItems(nextItems);
+    setEditingId(null);
+    setPriceDraft("");
+  };
+
+  const handleEditCancel = () => {
+    setEditingId(null);
+    setPriceDraft("");
   };
 
   const filtered = search
@@ -116,7 +159,17 @@ const ProductListPage = () => {
             data={filtered}
             keyExtractor={(i) => i.id}
             renderItem={({ item }) => (
-              <ProductRow item={item} onDelete={handleDelete} />
+              <ProductRow
+                item={item}
+                isEditing={editingId === item.id}
+                priceDraft={priceDraft}
+                onEditStart={() => handleEditStart(item)}
+                onEditChange={(value) =>
+                  setPriceDraft(value.replace(/[^0-9.]/g, ""))
+                }
+                onEditSave={handleEditSave}
+                onEditCancel={handleEditCancel}
+              />
             )}
           />
         )}
@@ -167,18 +220,44 @@ const localStyles = StyleSheet.create({
     fontWeight: "700",
     marginRight: 12,
   },
-  deleteBtn: {
-    backgroundColor: "#dc3545",
-    paddingHorizontal: 12,
+  editorWrap: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: "auto",
+  },
+  priceInput: {
+    width: 90,
+    borderWidth: 1,
+    borderColor: "#d0d7de",
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    textAlign: "right",
+    marginRight: 8,
+  },
+  editBtn: {
+    backgroundColor: "#0d6efd",
+    paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 6,
     flexDirection: "row",
     alignItems: "center",
   },
-  deleteText: {
+  editText: {
     color: "#fff",
     fontWeight: "600",
-    marginLeft: 8,
+    marginLeft: 6,
+  },
+  saveBtn: {
+    backgroundColor: "#198754",
+    padding: 8,
+    borderRadius: 6,
+    marginRight: 6,
+  },
+  cancelBtn: {
+    backgroundColor: "#6c757d",
+    padding: 8,
+    borderRadius: 6,
   },
 });
 
