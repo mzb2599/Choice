@@ -6,7 +6,9 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "icon": "./assets/grocery-icon.svg",
     "splash": {
+      "image": "./assets/grocery-icon.svg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,9 +24,7 @@
       "edgeToEdgeEnabled": true
     },
     "web": {},
-    "plugins": [
-      "expo-status-bar"
-    ],
+    "plugins": ["expo-status-bar"],
     "extra": {
       "eas": {
         "projectId": "342ac05d-106f-49b5-9a61-8fb237008745"
