@@ -56,7 +56,9 @@ const ProductRow = ({
       </View>
     ) : (
       <>
-        <Text style={localStyles.price}>₹{Number(item.price).toFixed(2)}</Text>
+        <Text style={localStyles.price}>
+          ₹{(Number(item.price) || 0).toFixed(2)}
+        </Text>
         <TouchableOpacity style={localStyles.editBtn} onPress={onEditStart}>
           <Pencil size={14} color="#fff" />
           <Text style={localStyles.editText}>Edit Price</Text>

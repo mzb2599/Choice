@@ -10,11 +10,10 @@ export default function CustomerList({
   filterDate,
   setFilterDate,
 }) {
-  console.log("Rendering CustomerList with data:", data);
   return (
     <View>
       <View style={{ ...Styles.paper, marginBottom: 12 }}>
-        <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ flex: 1 }}>
             <TextInput
               placeholder="Search by name or phone..."
@@ -61,9 +60,8 @@ export default function CustomerList({
                     color: item.balance >= 0 ? "#198754" : "#dc3545",
                   }}
                 >
-                  ₹{Math.abs(item.balance).toFixed(2)}
+                  ₹{Math.abs(Number(item.balance) || 0).toFixed(2)}
                 </Text>
-               
               </View>
             )}
           />

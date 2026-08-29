@@ -56,7 +56,9 @@ const ProductRow = ({ item, onDelete }) => (
       <Text style={localStyles.rowTitle}>{item.name}</Text>
     </View>
 
-    <Text style={localStyles.price}>₹{Number(item.price).toFixed(2)}</Text>
+    <Text style={localStyles.price}>
+      ₹{(Number(item.price) || 0).toFixed(2)}
+    </Text>
 
     <TouchableOpacity
       style={localStyles.deleteBtn}

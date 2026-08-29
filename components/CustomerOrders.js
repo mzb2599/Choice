@@ -65,11 +65,11 @@ export default function CustomerOrders({ transactions }) {
                     color: item.type === "received" ? "#198754" : "#dc3545",
                   }}
                 >
-                  ₹{Math.abs(item.amount).toFixed(2)}
+                  ₹{Math.abs(Number(item.amount) || 0).toFixed(2)}
                 </Text>
               </View>
               <Text style={{ marginTop: 6, color: "#6c757d" }}>
-                Balance: ₹{item.balance.toFixed(2)}
+                Balance: ₹{(Number(item.balance) || 0).toFixed(2)}
               </Text>
             </View>
           )}

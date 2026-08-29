@@ -56,12 +56,16 @@ export default function Header({
         <View style={Styles.balanceCards}>
           <View style={Styles.balanceCard}>
             <Text style={Styles.balanceLabel}>Total Balance</Text>
-            <Text style={Styles.balanceValue}>₹{totalBalance.toFixed(2)}</Text>
+            <Text style={Styles.balanceValue}>
+              ₹{(Number(totalBalance) || 0).toFixed(2)}
+            </Text>
           </View>
 
           <View style={Styles.balanceCard}>
             <Text style={Styles.balanceLabel}>Today's Total</Text>
-            <Text style={Styles.balanceValue}>₹{todayBalance.toFixed(2)}</Text>
+            <Text style={Styles.balanceValue}>
+              ₹{(Number(todayBalance) || 0).toFixed(2)}
+            </Text>
           </View>
         </View>
       </LinearGradient>
