@@ -9,6 +9,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { IndianRupee, Menu } from "lucide-react-native";
 import { Styles } from "../styles/appStyles";
+import { theme } from "../styles/theme";
 
 const menuItems = [
   { label: "Add Customer", index: 0 },
@@ -35,7 +36,10 @@ export default function Header({
 
   return (
     <>
-      <LinearGradient colors={["#667eea", "#764ba2"]} style={Styles.header}>
+      <LinearGradient
+        colors={[theme.colors.primary, theme.colors.accent]}
+        style={Styles.header}
+      >
         <View style={Styles.headerContent}>
           <TouchableOpacity
             style={Styles.menuButton}

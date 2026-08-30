@@ -1,18 +1,15 @@
 import { StyleSheet } from "react-native";
+import { theme } from "./theme";
 
 export const Styles = StyleSheet.create({
-  scroll: { padding: 16 },
+  scroll: { padding: theme.spacing.lg },
 
   header: {
-    padding: 24,
-    borderRadius: 18,
+    padding: theme.spacing.xl,
+    borderRadius: theme.radii.large,
     overflow: "hidden",
-    // subtle shadow for native platforms
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.18,
-    shadowRadius: 14,
-    elevation: 9,
+    ...theme.elevation.med,
+    backgroundColor: theme.colors.primary,
   },
 
   headerContent: {
@@ -25,17 +22,17 @@ export const Styles = StyleSheet.create({
   headerTitle: {
     flexDirection: "row",
     alignItems: "center",
-    marginLeft: 12,
+    marginLeft: theme.spacing.md,
   },
 
   menuButton: {
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "rgba(255,255,255,0.18)",
+    padding: theme.spacing.sm,
+    borderRadius: theme.radii.small,
+    backgroundColor: theme.colors.primaryDark + "66",
   },
 
   headerIcon: {
-    backgroundColor: "#0d6efd",
+    backgroundColor: theme.colors.accent,
     padding: 12,
     borderRadius: 12,
     marginRight: 12,
@@ -43,45 +40,47 @@ export const Styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  headerH1: { color: "#fff", fontSize: 24, fontWeight: "bold" },
-  headerSub: { color: "#fff", fontSize: 14, opacity: 0.8 },
+  headerH1: {
+    color: theme.colors.textOnPrimary,
+    fontSize: 24,
+    fontWeight: "800",
+  },
+  headerSub: { color: theme.colors.textOnPrimary, fontSize: 14, opacity: 0.9 },
 
   balanceCards: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 12,
+    marginTop: theme.spacing.sm,
   },
 
   balanceCard: {
-    backgroundColor: "rgba(255,255,255,0.18)",
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 12,
-    marginRight: 6,
-    marginBottom: 6,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.25)",
+    backgroundColor: theme.colors.primaryDark + "22",
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.radii.small,
+    marginRight: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
     minWidth: 160,
   },
 
   balanceLabel: {
-    color: "rgba(255,255,255,0.85)",
+    color: theme.colors.textOnPrimary,
     fontSize: 12,
     marginBottom: 4,
   },
 
   balanceValue: {
-    color: "#fff",
+    color: theme.colors.textOnPrimary,
     fontSize: 20,
-    fontWeight: "600",
-    letterSpacing: 0.15,
+    fontWeight: "700",
+    letterSpacing: 0.2,
   },
 
   tabsContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
-    marginTop: 10,
-    borderRadius: 8,
+    backgroundColor: theme.colors.card,
+    marginTop: theme.spacing.sm,
+    borderRadius: theme.radii.small,
     overflow: "hidden",
   },
 
@@ -94,15 +93,11 @@ export const Styles = StyleSheet.create({
     position: "absolute",
     top: 60,
     left: 20,
-    width: 220,
-    backgroundColor: "#fff",
-    borderRadius: 14,
+    width: 240,
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radii.large,
     paddingVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.18,
-    shadowRadius: 16,
-    elevation: 12,
+    ...theme.elevation.med,
   },
 
   menuItem: {
@@ -111,12 +106,12 @@ export const Styles = StyleSheet.create({
   },
 
   menuItemActive: {
-    backgroundColor: "rgba(102,126,234,0.12)",
+    backgroundColor: theme.colors.primary + "10",
   },
 
   menuItemText: {
     fontSize: 15,
-    fontWeight: "500",
+    fontWeight: "600",
   },
 
   tab: {
@@ -130,56 +125,58 @@ export const Styles = StyleSheet.create({
   },
 
   tabActive: {
-    backgroundColor: "#eef3ff",
-    borderBottomColor: "#2a5298",
+    backgroundColor: theme.colors.primary + "06",
+    borderBottomColor: theme.colors.primary,
   },
 
   tabText: { fontSize: 14, marginLeft: 4 },
 
   alert: {
-    padding: 16,
-    backgroundColor: "#d4edda",
-    borderRadius: 8,
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.success + "12",
+    borderRadius: theme.radii.small,
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: theme.spacing.sm,
   },
 
   card: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    marginVertical: 10,
+    backgroundColor: theme.colors.card,
+    padding: theme.spacing.lg,
+    borderRadius: theme.radii.normal,
+    marginVertical: theme.spacing.md,
   },
 
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 20 },
+  title: { fontSize: 22, fontWeight: "700", marginBottom: theme.spacing.lg },
 
-  label: { fontWeight: "600", marginBottom: 6 },
+  label: { fontWeight: "600", marginBottom: theme.spacing.sm },
 
   input: {
-    borderWidth: 2,
-    borderColor: "#e0e0e0",
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: theme.colors.subtleBorder,
+    padding: theme.spacing.sm,
+    borderRadius: theme.radii.small,
+    marginBottom: theme.spacing.md,
     fontSize: 14,
+    backgroundColor: theme.colors.card,
   },
 
   textarea: {
-    borderWidth: 2,
-    borderColor: "#e0e0e0",
-    padding: 12,
-    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.subtleBorder,
+    padding: theme.spacing.sm,
+    borderRadius: theme.radii.small,
     height: 200,
-    marginBottom: 16,
+    marginBottom: theme.spacing.md,
     fontSize: 14,
+    backgroundColor: theme.colors.card,
   },
 
   suggestionBox: {
     borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 8,
-    backgroundColor: "#fff",
+    borderColor: theme.colors.subtleBorder,
+    borderRadius: theme.radii.small,
+    backgroundColor: theme.colors.card,
     marginTop: -8,
     marginBottom: 12,
     maxHeight: 180,
@@ -193,7 +190,7 @@ export const Styles = StyleSheet.create({
   },
 
   suggestionText: {
-    color: "#111827",
+    color: theme.colors.muted,
     fontSize: 14,
   },
 
@@ -201,54 +198,54 @@ export const Styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: "#d0d7de",
-    borderRadius: 999,
+    borderColor: theme.colors.subtleBorder,
+    borderRadius: theme.radii.pill,
     marginRight: 8,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: theme.colors.card,
   },
 
   pillActive: {
-    backgroundColor: "#e8f0fe",
-    borderColor: "#667eea",
+    backgroundColor: theme.colors.primary + "10",
+    borderColor: theme.colors.primary,
   },
 
   pillText: {
-    color: "#495057",
+    color: theme.colors.text,
     fontWeight: "600",
   },
 
   pillTextActive: {
-    color: "#2a5298",
+    color: theme.colors.primary,
   },
 
   entryItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
-    borderRadius: 8,
+    backgroundColor: theme.colors.pageBg,
+    borderRadius: theme.radii.small,
     padding: 12,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: "#e9ecef",
+    borderColor: theme.colors.subtleBorder,
   },
 
   button: {
     padding: 14,
-    borderRadius: 8,
+    borderRadius: theme.radii.small,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
 
-  buttonPrimary: { backgroundColor: "#667eea" },
-  buttonSuccess: { backgroundColor: "#38ef7d" },
+  buttonPrimary: { backgroundColor: theme.colors.primary },
+  buttonSuccess: { backgroundColor: theme.colors.success },
 
   buttonText: { color: "#fff", fontWeight: "600" },
 
   paper: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: theme.colors.card,
+    padding: theme.spacing.lg,
+    borderRadius: theme.radii.small,
   },
 });

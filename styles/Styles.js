@@ -1,33 +1,35 @@
 // styles/Styles.native.js
 import { StyleSheet } from "react-native";
+import { theme } from "./theme";
 
 export const Styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: theme.colors.pageBg,
   },
 
   content: {
-    padding: 16,
+    padding: theme.spacing.lg,
   },
 
   paper: {
-    backgroundColor: "#ffffff",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radii.normal,
+    padding: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
     borderWidth: 1,
-    borderColor: "#e9ecef",
+    borderColor: theme.colors.subtleBorder,
+    ...theme.elevation.low,
   },
 
   input: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
     borderWidth: 1,
-    borderColor: "#dee2e6",
-    borderRadius: 6,
+    borderColor: theme.colors.subtleBorder,
+    borderRadius: theme.radii.small,
     fontSize: 15,
-    backgroundColor: "#fff",
+    backgroundColor: theme.colors.card,
   },
 
   chip: {
@@ -35,15 +37,15 @@ export const Styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 6,
     paddingHorizontal: 12,
-    borderRadius: 20,
+    borderRadius: theme.radii.pill,
   },
 
   chipSuccess: {
-    backgroundColor: "#d1e7dd",
+    backgroundColor: theme.colors.success + "22",
   },
 
   chipError: {
-    backgroundColor: "#f8d7da",
+    backgroundColor: theme.colors.danger + "22",
   },
 });
 
