@@ -33,6 +33,8 @@ export const theme = {
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.06,
       shadowRadius: 8,
+      // Web-friendly boxShadow equivalent
+      boxShadow: "0px 4px 8px rgba(0,0,0,0.06)",
       elevation: 6,
     },
     med: {
@@ -40,6 +42,8 @@ export const theme = {
       shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.08,
       shadowRadius: 16,
+      // Web-friendly boxShadow equivalent
+      boxShadow: "0px 8px 16px rgba(0,0,0,0.08)",
       elevation: 10,
     },
   },

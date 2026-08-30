@@ -50,50 +50,77 @@ export default function AddCustomer({
 
     handleAddCustomer();
   };
-  return (
-    <View style={Styles.card}>
-      {updateStatus && updateStatus !== "error" && (
-        <View style={Styles.alert}>
-          <Text style={{ color: "#0f5132", fontSize: 18, marginRight: 8 }}>
-            +
-          </Text>
-          <Text>{updateStatus}</Text>
-        </View>
-      )}
+  const children = [];
 
-      <Text style={Styles.title}>Add New Customer</Text>
-
-      <Text style={Styles.label}>Customer Name</Text>
-      <TextInput
-        style={Styles.input}
-        value={newCustomer.name}
-        onChangeText={(t) => setNewCustomer({ ...newCustomer, name: t })}
-        placeholder="Enter customer name"
-      />
-
-      <Text style={Styles.label}>Phone Number</Text>
-      <TextInput
-        style={Styles.input}
-        keyboardType="phone-pad"
-        value={newCustomer.phone}
-        onChangeText={(t) => setNewCustomer({ ...newCustomer, phone: t })}
-        placeholder="Enter phone number"
-      />
-
-      {validationMessage ? (
-        <Text style={{ color: "#dc3545", marginTop: 8 }}>
-          {validationMessage}
+  if (updateStatus && updateStatus !== "error") {
+    children.push(
+      <View style={Styles.alert} key="alert">
+        <Text style={{ color: "#0f5132", fontSize: 18, marginRight: 8 }}>
+          +
         </Text>
-      ) : null}
+        <Text>{String(updateStatus)}</Text>
+      </View>,
+    );
+  }
 
-      <TouchableOpacity
-        style={[Styles.button, Styles.buttonPrimary]}
-        onPress={handleSubmit}
-        disabled={!newCustomer.name || !newCustomer.phone}
-      >
-        <Text style={{ color: "#fff", fontSize: 20, marginRight: 8 }}>+</Text>
-        <Text style={Styles.buttonText}>Add Customer</Text>
-      </TouchableOpacity>
-    </View>
+  children.push(
+    <Text style={Styles.title} key="title">
+      Add New Customer
+    </Text>,
   );
+
+  children.push(
+    <Text style={Styles.label} key="label-name">
+      Customer Name
+    </Text>,
+  );
+
+  children.push(
+    <TextInput
+      key="input-name"
+      style={Styles.input}
+      value={newCustomer.name}
+      onChangeText={(t) => setNewCustomer({ ...newCustomer, name: t })}
+      placeholder="Enter customer name"
+    />,
+  );
+
+  children.push(
+    <Text style={Styles.label} key="label-phone">
+      Phone Number
+    </Text>,
+  );
+
+  children.push(
+    <TextInput
+      key="input-phone"
+      style={Styles.input}
+      keyboardType="phone-pad"
+      value={newCustomer.phone}
+      onChangeText={(t) => setNewCustomer({ ...newCustomer, phone: t })}
+      placeholder="Enter phone number"
+    />,
+  );
+
+  if (validationMessage) {
+    children.push(
+      <Text style={{ color: "#dc3545", marginTop: 8 }} key="validation">
+        {validationMessage}
+      </Text>,
+    );
+  }
+
+  children.push(
+    <TouchableOpacity
+      key="submit"
+      style={[Styles.button, Styles.buttonPrimary]}
+      onPress={handleSubmit}
+      disabled={!newCustomer.name || !newCustomer.phone}
+    >
+      <Text style={{ color: "#fff", fontSize: 20, marginRight: 8 }}>+</Text>
+      <Text style={Styles.buttonText}>Add Customer</Text>
+    </TouchableOpacity>,
+  );
+
+  return <View style={Styles.card}>{children}</View>;
 }
