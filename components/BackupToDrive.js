@@ -8,18 +8,8 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
-import * as AuthSession from "expo-auth-session";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Styles } from "../styles/Styles";
-
-const GOOGLE_AUTH_DISCOVERY = {
-  authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-  tokenEndpoint: "https://oauth2.googleapis.com/token",
-};
-
-// TODO: Replace with your own Google OAuth2 client ID.
-// For Expo Go: use OAuth client for iOS/Android with redirect URI from expo-auth-session.
-const CLIENT_ID = "YOUR_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com";
 
 const STORAGE_KEYS = {
   customers: "customers",
@@ -27,42 +17,20 @@ const STORAGE_KEYS = {
   lastBackup: "lastBackup",
 };
 
+// Backend base URL - change to your deployed server or set via env in native config
+const BACKEND_BASE = "http://10.0.2.2:4000"; // Android emulator loopback to host
+
 const BackupToDrive = ({ customers, onDataRestore }) => {
-  const [accessToken, setAccessToken] = useState(null);
   const [isBackingUp, setIsBackingUp] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [isLoadingBackups, setIsLoadingBackups] = useState(false);
   const [backups, setBackups] = useState([]);
   const [lastBackup, setLastBackup] = useState(null);
 
-  const [request, response, promptAsync] = AuthSession.useAuthRequest(
-    {
-      clientId: CLIENT_ID,
-      scopes: ["https://www.googleapis.com/auth/drive.file"],
-      responseType: "token",
-      extraParams: {
-        include_granted_scopes: "true",
-      },
-      redirectUri: AuthSession.makeRedirectUri({ useProxy: true }),
-    },
-    GOOGLE_AUTH_DISCOVERY,
-  );
-
   useEffect(() => {
     loadLastBackup();
+    loadBackups();
   }, []);
-
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { access_token } = response.params;
-      setAccessToken(access_token);
-      Alert.alert(
-        "Google Drive",
-        "Authentication successful. Ready to backup and restore.",
-      );
-      loadBackups(access_token);
-    }
-  }, [response]);
 
   const loadLastBackup = async () => {
     try {
@@ -98,94 +66,38 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
       version: "1.0",
     };
   };
-
-  const uploadToDrive = async () => {
-    if (!accessToken) {
-      Alert.alert("Google Drive", "Please connect your Google account first.");
-      return;
-    }
-
+  const uploadToBackend = async () => {
     setIsBackingUp(true);
-
     try {
       const data = await gatherData();
-      const fileContent = JSON.stringify(data, null, 2);
-      const timestamp = new Date().toISOString();
-
-      // 1) Create file metadata record in Drive
-      const createRes = await fetch(
-        "https://www.googleapis.com/drive/v3/files",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: `kirana-backup-${timestamp.replace(/[:.]/g, "-")}.json`,
-            mimeType: "application/json",
-            description: `Kirana app backup - ${new Date(timestamp).toLocaleString()}`,
-          }),
-        },
-      );
-
-      if (!createRes.ok) {
-        const body = await createRes.text();
-        throw new Error(`Drive create-fail: ${createRes.status} ${body}`);
-      }
-
-      const { id: fileId } = await createRes.json();
-
-      // 2) Upload payload as media to the created file
-      const uploadRes = await fetch(
-        `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: fileContent,
-        },
-      );
-
-      if (!uploadRes.ok) {
-        const body = await uploadRes.text();
-        throw new Error(`Drive upload-fail: ${uploadRes.status} ${body}`);
-      }
-
-      await saveLastBackup(timestamp);
-      Alert.alert("Backup success", "Your data is backed up to Google Drive.");
-      loadBackups(accessToken);
+      const res = await fetch(`${BACKEND_BASE}/backup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customers: data.customers,
+          products: data.products,
+          meta: { timestamp: data.timestamp, version: data.version },
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to upload backup to server");
+      await saveLastBackup(new Date().toISOString());
+      Alert.alert("Backup success", "Your data is backed up to cloud.");
+      loadBackups();
     } catch (err) {
-      console.error(err);
+      console.error("Backup error:", err);
       Alert.alert("Backup failed", err.message || "Failed to backup data.");
     } finally {
       setIsBackingUp(false);
     }
   };
 
-  const loadBackups = async (token) => {
-    if (!token) return;
-
+  const loadBackups = async () => {
     setIsLoadingBackups(true);
     try {
-      // Search for backup files
-      const searchRes = await fetch(
-        "https://www.googleapis.com/drive/v3/files?q=name contains 'kirana-backup-' and mimeType='application/json'&orderBy=modifiedTime desc",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (!searchRes.ok) {
-        throw new Error(`Search failed: ${searchRes.status}`);
-      }
-
-      const { files } = await searchRes.json();
-      setBackups(files || []);
+      const res = await fetch(`${BACKEND_BASE}/backups`);
+      if (!res.ok) throw new Error("Failed to load backups");
+      const list = await res.json();
+      setBackups(list || []);
     } catch (err) {
       console.error("Error loading backups:", err);
       Alert.alert("Error", "Failed to load backup list.");
@@ -194,12 +106,7 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
     }
   };
 
-  const restoreFromBackup = async (fileId) => {
-    if (!accessToken) {
-      Alert.alert("Google Drive", "Please connect your Google account first.");
-      return;
-    }
-
+  const restoreFromBackup = async (id) => {
     Alert.alert(
       "Restore Backup",
       "This will replace your current data with the backup. Are you sure?",
@@ -208,54 +115,34 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
         {
           text: "Restore",
           style: "destructive",
-          onPress: () => performRestore(fileId),
+          onPress: () => performRestore(id),
         },
       ],
     );
   };
 
-  const performRestore = async (fileId) => {
+  const performRestore = async (id) => {
     setIsRestoring(true);
     try {
-      // Download the backup file
-      const downloadRes = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      const res = await fetch(`${BACKEND_BASE}/backup/${id}`);
+      if (!res.ok) throw new Error("Failed to download backup");
+      const data = await res.json();
 
-      if (!downloadRes.ok) {
-        throw new Error(`Download failed: ${downloadRes.status}`);
-      }
+      if (!data.customers || !data.products)
+        throw new Error("Invalid backup format");
 
-      const backupData = await downloadRes.json();
-
-      // Validate backup data
-      if (!backupData.customers || !backupData.products) {
-        throw new Error("Invalid backup file format");
-      }
-
-      // Save to local storage
       await AsyncStorage.setItem(
         STORAGE_KEYS.customers,
-        JSON.stringify(backupData.customers),
+        JSON.stringify(data.customers),
       );
       await AsyncStorage.setItem(
         STORAGE_KEYS.products,
-        JSON.stringify(backupData.products),
+        JSON.stringify(data.products),
       );
-
-      // Notify parent component to refresh data
-      if (onDataRestore) {
-        onDataRestore(backupData);
-      }
-
+      if (onDataRestore) onDataRestore(data);
       Alert.alert(
         "Restore Complete",
-        `Restored ${backupData.customers.length} customers and ${backupData.products.length} products.`,
+        `Restored ${data.customers.length} customers and ${data.products.length} products.`,
       );
     } catch (err) {
       console.error("Restore error:", err);
@@ -265,41 +152,25 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
     }
   };
 
-  const deleteBackup = async (fileId) => {
-    if (!accessToken) return;
-
-    Alert.alert(
-      "Delete Backup",
-      "Are you sure you want to delete this backup from Google Drive?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => performDelete(fileId),
-        },
-      ],
-    );
+  const deleteBackup = async (id) => {
+    Alert.alert("Delete Backup", "Delete this backup from cloud?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => performDelete(id),
+      },
+    ]);
   };
 
-  const performDelete = async (fileId) => {
+  const performDelete = async (id) => {
     try {
-      const deleteRes = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${fileId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      if (!deleteRes.ok) {
-        throw new Error(`Delete failed: ${deleteRes.status}`);
-      }
-
-      Alert.alert("Success", "Backup deleted from Google Drive.");
-      loadBackups(accessToken);
+      const res = await fetch(`${BACKEND_BASE}/backup/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete backup");
+      Alert.alert("Success", "Backup deleted from cloud.");
+      loadBackups();
     } catch (err) {
       console.error("Delete error:", err);
       Alert.alert("Delete Failed", "Failed to delete backup.");
@@ -309,9 +180,13 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
   const renderBackupItem = ({ item }) => (
     <View style={localStyles.backupItem}>
       <View style={{ flex: 1 }}>
-        <Text style={localStyles.backupName}>{item.name}</Text>
+        <Text style={localStyles.backupName}>
+          Backup {new Date(item.createdAt).toLocaleDateString()}
+        </Text>
         <Text style={localStyles.backupDate}>
-          {new Date(item.modifiedTime).toLocaleString()}
+          {new Date(item.createdAt).toLocaleString()} -{" "}
+          {item.counts?.customers || 0} customers, {item.counts?.products || 0}{" "}
+          products
         </Text>
       </View>
       <View style={{ flexDirection: "row" }}>
@@ -339,7 +214,7 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
     <View style={Styles.container}>
       <View style={Styles.paper}>
         <Text style={{ fontSize: 18, fontWeight: "700", marginBottom: 12 }}>
-          Google Drive Backup
+          Cloud Backup
         </Text>
 
         {lastBackup && (
@@ -349,32 +224,12 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
         )}
 
         <TouchableOpacity
-          style={[Styles.button, { marginBottom: 12 }]}
-          onPress={() => {
-            if (!request) {
-              Alert.alert(
-                "Google Drive",
-                "Unable to start authorization request.",
-              );
-              return;
-            }
-            promptAsync({ useProxy: true });
-          }}
-        >
-          <Text style={Styles.buttonText}>
-            {accessToken
-              ? "Reconnect Google Account"
-              : "Connect Google Account"}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
           style={[
             Styles.button,
             { backgroundColor: "#198754", marginBottom: 20 },
           ]}
-          onPress={uploadToDrive}
-          disabled={isBackingUp || !accessToken}
+          onPress={uploadToBackend}
+          disabled={isBackingUp}
         >
           {isBackingUp ? (
             <ActivityIndicator color="#fff" />
@@ -391,9 +246,7 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
           <ActivityIndicator size="large" color="#0d6efd" />
         ) : backups.length === 0 ? (
           <Text style={{ textAlign: "center", color: "#6c757d", padding: 20 }}>
-            {accessToken
-              ? "No backups found"
-              : "Connect your account to view backups"}
+            No cloud backups found
           </Text>
         ) : (
           <FlatList
