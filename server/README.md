@@ -15,18 +15,19 @@ From the `server` directory:
 ```powershell
 npm install
 $env:MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/choice_backup"
+$env:JWT_SECRET="replace-with-a-long-random-secret"
 npm start
 ```
 
-The API listens on `http://localhost:4000` by default.
+The API listens on `http://localhost:4000` by default. The app's login and signup screens use `/auth/signup` and `/auth/login`; backups are private to the signed-in store owner.
 
 ## Connect the app
 
-Set `BACKEND_BASE` in `components/BackupToDrive.js` to the server's reachable URL:
+Set `BACKEND_BASE` in `utils/auth.js` to the server's reachable URL:
 
 - Android emulator: `http://10.0.2.2:4000`
 - iOS simulator: `http://localhost:4000`
 - Physical device: `http://<your-computer-LAN-IP>:4000`
 - Hosted server: `https://<your-api-domain>`
 
-Deploy the server behind HTTPS and add user authentication before using it with real customer data. The current API intentionally has no authentication and should only be used for local development until that is added.
+Deploy the server behind HTTPS before using it with real customer data. Keep `JWT_SECRET` private and rotate the MongoDB credentials if they have been exposed outside this machine.
