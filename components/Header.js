@@ -26,6 +26,7 @@ export default function Header({
   todayBalance,
   activeTab,
   onNavigate,
+  onLogout,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -92,6 +93,9 @@ export default function Header({
               <Text style={Styles.menuItemText}>{item.label}</Text>
             </TouchableOpacity>
           ))}
+          <TouchableOpacity style={Styles.menuItem} onPress={onLogout}>
+            <Text style={Styles.menuItemText}>Sign out</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </>

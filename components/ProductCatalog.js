@@ -70,7 +70,7 @@ const ProductRow = ({ item, onDelete }) => (
   </View>
 );
 
-const ProductCatalog = () => {
+const ProductCatalog = ({ userId }) => {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState({ name: "", price: "" });
   const [search, setSearch] = useState("");
@@ -78,7 +78,7 @@ const ProductCatalog = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const json = await AsyncStorage.getItem(STORAGE_KEY);
+        const json = await AsyncStorage.getItem(`${STORAGE_KEY}:${userId}`);
         const parsed = json ? JSON.parse(json) : [];
         // Ensure price is numeric
         const normalized = parsed.map((p) => ({
@@ -92,12 +92,15 @@ const ProductCatalog = () => {
     };
 
     load();
-  }, []);
+  }, [userId]);
 
   const saveItems = async (next) => {
     try {
       setItems(next);
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      await AsyncStorage.setItem(
+        `${STORAGE_KEY}:${userId}`,
+        JSON.stringify(next),
+      );
     } catch (err) {
       console.error("Error saving products:", err);
     }

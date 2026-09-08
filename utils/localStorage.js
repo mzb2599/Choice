@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const KEY = "customers";
+const keyForUser = (userId) => `customers:${userId}`;
 
-export const loadCustomers = async () => {
+export const loadCustomers = async (userId) => {
   try {
-    const stored = await AsyncStorage.getItem(KEY);
+    const stored = await AsyncStorage.getItem(keyForUser(userId));
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error("Error loading customers:", error);
@@ -12,9 +12,9 @@ export const loadCustomers = async () => {
   }
 };
 
-export const saveCustomers = async (customers) => {
+export const saveCustomers = async (customers, userId) => {
   try {
-    await AsyncStorage.setItem(KEY, JSON.stringify(customers));
+    await AsyncStorage.setItem(keyForUser(userId), JSON.stringify(customers));
   } catch (error) {
     console.error("Error saving customers:", error);
   }

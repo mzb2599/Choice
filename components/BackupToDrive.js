@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Styles } from "../styles/Styles";
+import { BACKEND_BASE } from "../utils/auth";
 
 const STORAGE_KEYS = {
   customers: "customers",
@@ -18,9 +19,7 @@ const STORAGE_KEYS = {
 };
 
 // Backend base URL - change to your deployed server or set via env in native config
-const BACKEND_BASE = "http://10.0.2.2:4000"; // Android emulator loopback to host
-
-const BackupToDrive = ({ customers, onDataRestore }) => {
+const BackupToDrive = ({ customers, onDataRestore, token, userId }) => {
   const [isBackingUp, setIsBackingUp] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [isLoadingBackups, setIsLoadingBackups] = useState(false);
@@ -54,7 +53,8 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
 
   const gatherData = async () => {
     const productJson =
-      (await AsyncStorage.getItem(STORAGE_KEYS.products)) || "[]";
+      (await AsyncStorage.getItem(`${STORAGE_KEYS.products}:${userId}`)) ||
+      "[]";
     const productData = JSON.parse(productJson);
 
     const customerData = customers || [];
@@ -72,7 +72,10 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
       const data = await gatherData();
       const res = await fetch(`${BACKEND_BASE}/backup`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           customers: data.customers,
           products: data.products,
@@ -94,7 +97,9 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
   const loadBackups = async () => {
     setIsLoadingBackups(true);
     try {
-      const res = await fetch(`${BACKEND_BASE}/backups`);
+      const res = await fetch(`${BACKEND_BASE}/backups`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (!res.ok) throw new Error("Failed to load backups");
       const list = await res.json();
       setBackups(list || []);
@@ -124,7 +129,9 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
   const performRestore = async (id) => {
     setIsRestoring(true);
     try {
-      const res = await fetch(`${BACKEND_BASE}/backup/${id}`);
+      const res = await fetch(`${BACKEND_BASE}/backup/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (!res.ok) throw new Error("Failed to download backup");
       const data = await res.json();
 
@@ -132,11 +139,11 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
         throw new Error("Invalid backup format");
 
       await AsyncStorage.setItem(
-        STORAGE_KEYS.customers,
+        `${STORAGE_KEYS.customers}:${userId}`,
         JSON.stringify(data.customers),
       );
       await AsyncStorage.setItem(
-        STORAGE_KEYS.products,
+        `${STORAGE_KEYS.products}:${userId}`,
         JSON.stringify(data.products),
       );
       if (onDataRestore) onDataRestore(data);
@@ -167,6 +174,7 @@ const BackupToDrive = ({ customers, onDataRestore }) => {
     try {
       const res = await fetch(`${BACKEND_BASE}/backup/${id}`, {
         method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Failed to delete backup");
       Alert.alert("Success", "Backup deleted from cloud.");

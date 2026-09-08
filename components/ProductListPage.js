@@ -68,7 +68,7 @@ const ProductRow = ({
   </View>
 );
 
-const ProductListPage = () => {
+const ProductListPage = ({ userId }) => {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState(null);
@@ -77,7 +77,7 @@ const ProductListPage = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const json = await AsyncStorage.getItem(STORAGE_KEY);
+        const json = await AsyncStorage.getItem(`${STORAGE_KEY}:${userId}`);
         const parsed = json ? JSON.parse(json) : [];
         const normalized = parsed.map((p) => ({
           ...p,
@@ -90,12 +90,15 @@ const ProductListPage = () => {
     };
 
     load();
-  }, []);
+  }, [userId]);
 
   const saveItems = async (next) => {
     try {
       setItems(next);
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      await AsyncStorage.setItem(
+        `${STORAGE_KEY}:${userId}`,
+        JSON.stringify(next),
+      );
     } catch (err) {
       console.error("Error saving products:", err);
     }

@@ -15,8 +15,12 @@ import {
 import { parseBulkUpdates } from "./utils/bulkParser";
 import { Styles } from "./styles/Styles";
 import { View } from "react-native";
+import AuthScreen from "./components/AuthScreen";
+import { clearSession, getSession } from "./utils/auth";
 
 const App = () => {
+  const [session, setSession] = useState(null);
+  const [sessionLoading, setSessionLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,17 +35,25 @@ const App = () => {
   const [updateStatus, setUpdateStatus] = useState("");
 
   useEffect(() => {
+    getSession().then((stored) => {
+      setSession(stored);
+      setSessionLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
     const fetchCustomers = async () => {
-      const stored = await loadCustomers();
+      const stored = await loadCustomers(session.user.id);
       setCustomers(Array.isArray(stored) ? stored : []);
     };
 
     fetchCustomers();
-  }, []);
+  }, [session]);
 
   const saveCustomers = (next) => {
     setCustomers(next);
-    saveToStorage(next);
+    saveToStorage(next, session.user.id);
   };
 
   const handleAddCustomer = () => {
@@ -151,6 +163,9 @@ const App = () => {
     setActiveTab(tabIndex);
   };
 
+  if (sessionLoading) return null;
+  if (!session) return <AuthScreen onAuthenticated={setSession} />;
+
   const filteredCustomers = () => {
     let filtered = customers;
 
@@ -191,6 +206,10 @@ const App = () => {
         todayBalance={todayBalance}
         activeTab={activeTab}
         onNavigate={handleNavigate}
+        onLogout={async () => {
+          await clearSession();
+          setSession(null);
+        }}
       />
 
       <View style={Styles.content}>
@@ -237,12 +256,14 @@ const App = () => {
           <CustomerOrders transactions={getAllTransactions()} />
         )}
 
-        {activeTab === 4 && <ProductCatalog />}
-        {activeTab === 5 && <ProductListPage />}
+        {activeTab === 4 && <ProductCatalog userId={session.user.id} />}
+        {activeTab === 5 && <ProductListPage userId={session.user.id} />}
         {activeTab === 6 && (
           <BackupToDrive
             customers={customers}
             onDataRestore={handleDataRestore}
+            token={session.token}
+            userId={session.user.id}
           />
         )}
       </View>
