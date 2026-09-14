@@ -26,12 +26,14 @@ export default function BulkUpdate({
 
   const filteredCustomers = useMemo(() => {
     const query = debouncedQuery;
-    if (!query) return customers.slice(0, 10);
+    if (query.length < 2 || bulkDraft.customerName === customerSearch) {
+      return [];
+    }
 
     return customers
       .filter((customer) => customer.name.toLowerCase().includes(query))
-      .slice(0, 20);
-  }, [debouncedQuery, customers]);
+      .slice(0, 2);
+  }, [bulkDraft.customerName, customerSearch, debouncedQuery, customers]);
 
   const handleSelectCustomer = (customerName) => {
     setBulkDraft((prev) => ({ ...prev, customerName }));

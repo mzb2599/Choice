@@ -14,7 +14,7 @@ import {
 } from "./utils/localStorage";
 import { parseBulkUpdates } from "./utils/bulkParser";
 import { Styles } from "./styles/Styles";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import AuthScreen from "./components/AuthScreen";
 import { clearSession, getSession } from "./utils/auth";
 
@@ -201,72 +201,77 @@ const App = () => {
 
   return (
     <View style={Styles.container}>
-      <Header
-        totalBalance={totalBalance}
-        todayBalance={todayBalance}
-        activeTab={activeTab}
-        onNavigate={handleNavigate}
-        onLogout={async () => {
-          await clearSession();
-          setSession(null);
-        }}
-      />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 24 }}
+      >
+        <Header
+          totalBalance={totalBalance}
+          todayBalance={todayBalance}
+          activeTab={activeTab}
+          onNavigate={handleNavigate}
+          onLogout={async () => {
+            await clearSession();
+            setSession(null);
+          }}
+        />
 
-      <View style={Styles.content}>
-        <StatusAlert updateStatus={updateStatus} />
+        <View style={Styles.content}>
+          <StatusAlert updateStatus={updateStatus} />
 
-        {activeTab === 0 && (
-          <AddCustomer
-            newCustomer={newCustomer}
-            setNewCustomer={setNewCustomer}
-            handleAddCustomer={handleAddCustomer}
-            customers={customers}
-            updateStatus={updateStatus}
-          />
-        )}
+          {activeTab === 0 && (
+            <AddCustomer
+              newCustomer={newCustomer}
+              setNewCustomer={setNewCustomer}
+              handleAddCustomer={handleAddCustomer}
+              customers={customers}
+              updateStatus={updateStatus}
+            />
+          )}
 
-        {activeTab === 1 && (
-          <BulkUpdate
-            customers={customers}
-            bulkEntries={bulkEntries}
-            setBulkEntries={setBulkEntries}
-            bulkDraft={bulkDraft}
-            setBulkDraft={setBulkDraft}
-            handleAddBulkEntry={handleAddBulkEntry}
-            handleBulkUpdate={handleBulkUpdate}
-            updateStatus={updateStatus}
-          />
-        )}
+          {activeTab === 1 && (
+            <BulkUpdate
+              customers={customers}
+              bulkEntries={bulkEntries}
+              setBulkEntries={setBulkEntries}
+              bulkDraft={bulkDraft}
+              setBulkDraft={setBulkDraft}
+              handleAddBulkEntry={handleAddBulkEntry}
+              handleBulkUpdate={handleBulkUpdate}
+              updateStatus={updateStatus}
+            />
+          )}
 
-        {activeTab === 2 && (
-          <CustomerList
-            data={
-              filterDate === "today"
-                ? getTodayTransactions().filter((c) => c.todayTotal !== 0)
-                : filteredCustomers()
-            }
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filterDate={filterDate}
-            setFilterDate={setFilterDate}
-          />
-        )}
+          {activeTab === 2 && (
+            <CustomerList
+              data={
+                filterDate === "today"
+                  ? getTodayTransactions().filter((c) => c.todayTotal !== 0)
+                  : filteredCustomers()
+              }
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              filterDate={filterDate}
+              setFilterDate={setFilterDate}
+            />
+          )}
 
-        {activeTab === 3 && (
-          <CustomerOrders transactions={getAllTransactions()} />
-        )}
+          {activeTab === 3 && (
+            <CustomerOrders transactions={getAllTransactions()} />
+          )}
 
-        {activeTab === 4 && <ProductCatalog userId={session.user.id} />}
-        {activeTab === 5 && <ProductListPage userId={session.user.id} />}
-        {activeTab === 6 && (
-          <BackupToDrive
-            customers={customers}
-            onDataRestore={handleDataRestore}
-            token={session.token}
-            userId={session.user.id}
-          />
-        )}
-      </View>
+          {activeTab === 4 && <ProductCatalog userId={session.user.id} />}
+          {activeTab === 5 && <ProductListPage userId={session.user.id} />}
+          {activeTab === 6 && (
+            <BackupToDrive
+              customers={customers}
+              onDataRestore={handleDataRestore}
+              token={session.token}
+              userId={session.user.id}
+            />
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 };
