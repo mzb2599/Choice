@@ -10,18 +10,14 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  authenticate,
-  requestPasswordReset,
-  resetPassword,
-} from "../utils/auth";
+import { authenticate, requestPasswordReset } from "../utils/auth";
+import PasswordResetScreen from "./PasswordResetScreen";
 
 export default function AuthScreen({ onAuthenticated }) {
   const [mode, setMode] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -50,14 +46,6 @@ export default function AuthScreen({ onAuthenticated }) {
       if (mode === "forgot") {
         const result = await requestPasswordReset(email);
         setNotice(result.message);
-      } else if (mode === "reset") {
-        if (password !== confirmPassword)
-          throw new Error("Passwords do not match");
-        await resetPassword(resetToken, password);
-        setNotice("Your password was reset. You can sign in now.");
-        setMode("login");
-        setPassword("");
-        setConfirmPassword("");
       } else {
         const session = await authenticate(mode, { name, email, password });
         onAuthenticated(session);
@@ -68,6 +56,24 @@ export default function AuthScreen({ onAuthenticated }) {
       setLoading(false);
     }
   };
+
+  if (mode === "reset") {
+    return (
+      <PasswordResetScreen
+        token={resetToken}
+        onCompleted={() => {
+          setMode("login");
+          setPassword("");
+          setNotice("Your password was reset. You can sign in now.");
+        }}
+        onBack={() => {
+          setMode("login");
+          setError("");
+          setNotice("");
+        }}
+      />
+    );
+  }
 
   return (
     <LinearGradient
@@ -85,16 +91,12 @@ export default function AuthScreen({ onAuthenticated }) {
               ? "Welcome back"
               : mode === "signup"
                 ? "Open your store account"
-                : mode === "forgot"
-                  ? "Forgot your password?"
-                  : "Choose a new password"}
+                : "Forgot your password?"}
           </Text>
           <Text style={styles.subtitle}>
             {mode === "forgot"
               ? "Enter your email and we will send a reset link."
-              : mode === "reset"
-                ? "Your new password must be at least 8 characters."
-                : "Manage your grocery business from anywhere."}
+              : "Manage your grocery business from anywhere."}
           </Text>
 
           {mode === "signup" && (
@@ -106,17 +108,15 @@ export default function AuthScreen({ onAuthenticated }) {
               onChangeText={setName}
             />
           )}
-          {mode !== "reset" && (
-            <TextInput
-              style={styles.input}
-              placeholder="Email address"
-              placeholderTextColor="#78909c"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              value={email}
-              onChangeText={setEmail}
-            />
-          )}
+          <TextInput
+            style={styles.input}
+            placeholder="Email address"
+            placeholderTextColor="#78909c"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
           {mode !== "forgot" && (
             <TextInput
               style={styles.input}
@@ -125,16 +125,6 @@ export default function AuthScreen({ onAuthenticated }) {
               secureTextEntry
               value={password}
               onChangeText={setPassword}
-            />
-          )}
-          {mode === "reset" && (
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm new password"
-              placeholderTextColor="#78909c"
-              secureTextEntry
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
             />
           )}
           {!!notice && <Text style={styles.notice}>{notice}</Text>}
@@ -152,9 +142,7 @@ export default function AuthScreen({ onAuthenticated }) {
                   ? "Sign in"
                   : mode === "signup"
                     ? "Create account"
-                    : mode === "forgot"
-                      ? "Send reset link"
-                      : "Reset password"}
+                    : "Send reset link"}
               </Text>
             )}
           </TouchableOpacity>
@@ -176,7 +164,7 @@ export default function AuthScreen({ onAuthenticated }) {
               setNotice("");
             }}
           >
-            {mode !== "reset" && mode !== "forgot" && (
+            {mode !== "forgot" && (
               <Text style={styles.switchText}>
                 {mode === "login"
                   ? "New store owner? Create an account"
@@ -184,7 +172,7 @@ export default function AuthScreen({ onAuthenticated }) {
               </Text>
             )}
           </TouchableOpacity>
-          {(mode === "reset" || mode === "forgot") && (
+          {mode === "forgot" && (
             <TouchableOpacity
               onPress={() => {
                 setMode("login");
