@@ -26,3 +26,28 @@ export const authenticate = async (mode, values) => {
   await saveSession(data);
   return data;
 };
+
+const requestAuth = async (path, values) => {
+  const response = await fetch(`${BACKEND_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(values),
+  });
+  const body = await response.text();
+  let data;
+  try {
+    data = JSON.parse(body);
+  } catch {
+    throw new Error(
+      "Unable to reach the Choice server. Please start the backend and try again.",
+    );
+  }
+  if (!response.ok) throw new Error(data.error || "Request failed");
+  return data;
+};
+
+export const requestPasswordReset = (email) =>
+  requestAuth("/auth/forgot-password", { email });
+
+export const resetPassword = (token, password) =>
+  requestAuth("/auth/reset-password", { token, password });

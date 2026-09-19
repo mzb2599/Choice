@@ -16,6 +16,12 @@ From the `server` directory:
 npm install
 $env:MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/choice_backup"
 $env:JWT_SECRET="replace-with-a-long-random-secret"
+$env:SMTP_HOST="smtp.example.com"
+$env:SMTP_PORT="587"
+$env:SMTP_USER="your-smtp-user"
+$env:SMTP_PASSWORD="your-smtp-password"
+$env:SMTP_FROM="Choice <no-reply@example.com>"
+$env:RESET_URL="choice://reset-password?resetToken="
 npm start
 ```
 
@@ -31,3 +37,7 @@ Set `BACKEND_BASE` in `utils/auth.js` to the server's reachable URL:
 - Hosted server: `https://<your-api-domain>`
 
 Deploy the server behind HTTPS before using it with real customer data. Keep `JWT_SECRET` private and rotate the MongoDB credentials if they have been exposed outside this machine.
+
+Password reset requires the SMTP variables above. `RESET_URL` must point to the app's deep link or a web deployment that can open the reset flow.
+
+For Gmail, use `smtp.gmail.com`, port `587`, `SMTP_SECURE=false`, and a Google app password for `SMTP_PASSWORD`. Do not use your normal Google account password.
