@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, TextInput, FlatList } from "react-native";
-import { Users, TrendingUp, TrendingDown } from "lucide-react-native";
+import { View, Text, TextInput } from "react-native";
+import { Users } from "lucide-react-native";
 import { Styles } from "../styles/Styles";
 
 export default function CustomerList({
@@ -37,34 +37,31 @@ export default function CustomerList({
             </Text>
           </View>
         ) : (
-          <FlatList
-            data={data}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => (
-              <View
+          data.map((item) => (
+            <View
+              key={String(item.id)}
+              style={{
+                paddingVertical: 12,
+                borderBottomWidth: 1,
+                borderBottomColor: "#eee",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontWeight: "600" }}>{item.name}</Text>
+              <Text style={{ color: "#6c757d" }}>{item.phone}</Text>
+              <Text
                 style={{
-                  paddingVertical: 12,
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#eee",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  fontWeight: "700",
+                  textAlign: "right",
+                  color: item.balance >= 0 ? "#198754" : "#dc3545",
                 }}
               >
-                <Text style={{ fontWeight: "600" }}>{item.name}</Text>
-                <Text style={{ color: "#6c757d" }}>{item.phone}</Text>
-                <Text
-                  style={{
-                    fontWeight: "700",
-                    textAlign: "right",
-                    color: item.balance >= 0 ? "#198754" : "#dc3545",
-                  }}
-                >
-                  ₹{Math.abs(Number(item.balance) || 0).toFixed(2)}
-                </Text>
-              </View>
-            )}
-          />
+                ₹{Math.abs(Number(item.balance) || 0).toFixed(2)}
+              </Text>
+            </View>
+          ))
         )}
       </View>
     </View>

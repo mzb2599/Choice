@@ -202,8 +202,10 @@ const App = () => {
   return (
     <View style={Styles.container}>
       <ScrollView
+        style={{ flex: 1 }}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ paddingBottom: 24 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
       >
         <Header
           totalBalance={totalBalance}

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text } from "react-native";
 import { CalendarDays } from "lucide-react-native";
 import { Styles } from "../styles/Styles";
 
@@ -27,53 +27,48 @@ export default function CustomerOrders({ transactions }) {
           </Text>
         </View>
       ) : (
-        <FlatList
-          data={sorted}
-          keyExtractor={(item, idx) =>
-            `${item.customerName}-${item.date}-${idx}`
-          }
-          renderItem={({ item }) => (
+        sorted.map((item, index) => (
+          <View
+            key={`${item.customerName}-${item.date}-${index}`}
+            style={{
+              paddingVertical: 12,
+              borderBottomWidth: 1,
+              borderBottomColor: "#eee",
+            }}
+          >
+            <Text style={{ fontWeight: "600" }}>{item.customerName}</Text>
+            <Text style={{ color: "#6c757d", fontSize: 13 }}>
+              {formatDate(item.date)}
+            </Text>
             <View
               style={{
-                paddingVertical: 12,
-                borderBottomWidth: 1,
-                borderBottomColor: "#eee",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 8,
               }}
             >
-              <Text style={{ fontWeight: "600" }}>{item.customerName}</Text>
-              <Text style={{ color: "#6c757d", fontSize: 13 }}>
-                {formatDate(item.date)}
-              </Text>
-              <View
+              <Text
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 8,
+                  fontWeight: "700",
+                  color: item.type === "received" ? "#198754" : "#dc3545",
                 }}
               >
-                <Text
-                  style={{
-                    fontWeight: "700",
-                    color: item.type === "received" ? "#198754" : "#dc3545",
-                  }}
-                >
-                  {item.type === "received" ? "Received" : "Credit"}
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: "700",
-                    color: item.type === "received" ? "#198754" : "#dc3545",
-                  }}
-                >
-                  ₹{Math.abs(Number(item.amount) || 0).toFixed(2)}
-                </Text>
-              </View>
-              <Text style={{ marginTop: 6, color: "#6c757d" }}>
-                Balance: ₹{(Number(item.balance) || 0).toFixed(2)}
+                {item.type === "received" ? "Received" : "Credit"}
+              </Text>
+              <Text
+                style={{
+                  fontWeight: "700",
+                  color: item.type === "received" ? "#198754" : "#dc3545",
+                }}
+              >
+                ₹{Math.abs(Number(item.amount) || 0).toFixed(2)}
               </Text>
             </View>
-          )}
-        />
+            <Text style={{ marginTop: 6, color: "#6c757d" }}>
+              Balance: ₹{(Number(item.balance) || 0).toFixed(2)}
+            </Text>
+          </View>
+        ))
       )}
     </View>
   );
