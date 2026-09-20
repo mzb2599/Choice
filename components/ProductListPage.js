@@ -8,17 +8,21 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { Package, Search, Pencil, Check, X } from "lucide-react-native";
+import { Package, Search, Pencil, Check, X, Plus } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Styles } from "../styles/Styles";
 
 const STORAGE_KEY = "products";
 
-const EmptyState = () => (
+const EmptyState = ({ onAddProduct }) => (
   <View style={localStyles.emptyContainer}>
     <Package size={48} color="#6c757d" />
     <Text style={localStyles.emptyTitle}>No products found</Text>
     <Text style={localStyles.emptySub}>Add products in Product Catalog</Text>
+    <TouchableOpacity style={localStyles.addButton} onPress={onAddProduct}>
+      <Plus size={18} color="#fff" />
+      <Text style={localStyles.addButtonText}>Add Product</Text>
+    </TouchableOpacity>
   </View>
 );
 
@@ -68,7 +72,7 @@ const ProductRow = ({
   </View>
 );
 
-const ProductListPage = ({ userId }) => {
+const ProductListPage = ({ userId, onAddProduct }) => {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState(null);
@@ -158,7 +162,7 @@ const ProductListPage = ({ userId }) => {
 
       <View style={[Styles.paper]}>
         {filtered.length === 0 ? (
-          <EmptyState />
+          <EmptyState onAddProduct={onAddProduct} />
         ) : (
           <FlatList
             data={filtered}
@@ -197,6 +201,21 @@ const localStyles = StyleSheet.create({
   emptySub: {
     color: "#6c757d",
     marginTop: 6,
+  },
+  addButton: {
+    marginTop: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    backgroundColor: "#0d6efd",
+    borderRadius: 6,
+  },
+  addButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    marginLeft: 8,
   },
   listTitle: {
     fontSize: 16,

@@ -256,6 +256,7 @@ const App = () => {
               setSearchTerm={setSearchTerm}
               filterDate={filterDate}
               setFilterDate={setFilterDate}
+              onAddCustomer={() => handleNavigate(0)}
             />
           )}
 
@@ -264,7 +265,12 @@ const App = () => {
           )}
 
           {activeTab === 4 && <ProductCatalog userId={session.user.id} />}
-          {activeTab === 5 && <ProductListPage userId={session.user.id} />}
+          {activeTab === 5 && (
+            <ProductListPage
+              userId={session.user.id}
+              onAddProduct={() => handleNavigate(4)}
+            />
+          )}
           {activeTab === 6 && (
             <BackupToDrive
               customers={customers}

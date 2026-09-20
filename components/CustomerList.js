@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, TextInput } from "react-native";
-import { Users } from "lucide-react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { Plus, Users } from "lucide-react-native";
 import { Styles } from "../styles/Styles";
 
 export default function CustomerList({
@@ -9,6 +9,7 @@ export default function CustomerList({
   setSearchTerm,
   filterDate,
   setFilterDate,
+  onAddCustomer,
 }) {
   return (
     <View>
@@ -35,6 +36,18 @@ export default function CustomerList({
             <Text style={{ color: "#6c757d" }}>
               Add customers to get started
             </Text>
+            <TouchableOpacity
+              style={{
+                ...Styles.button,
+                ...Styles.buttonPrimary,
+                flexDirection: "row",
+                marginTop: 16,
+              }}
+              onPress={onAddCustomer}
+            >
+              <Plus size={18} color="#fff" />
+              <Text style={Styles.buttonText}>Add Customer</Text>
+            </TouchableOpacity>
           </View>
         ) : (
           data.map((item) => (
