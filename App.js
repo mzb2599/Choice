@@ -104,28 +104,29 @@ const App = () => {
     }
 
     const updatedCustomers = customers.map((customer) => {
-      const update = updates.find(
-        (u) => customer.name.toLowerCase() === u.name.toLowerCase(),
+      const customerUpdates = updates.filter(
+        (update) => customer.name.toLowerCase() === update.name.toLowerCase(),
       );
 
-      if (update) {
-        const transaction = {
+      if (customerUpdates.length === 0) return customer;
+
+      let balance = customer.balance;
+      const newTransactions = customerUpdates.map((update) => {
+        balance += update.type === "received" ? update.amount : -update.amount;
+
+        return {
           date: new Date().toISOString(),
           amount: update.amount,
           type: update.type,
-          balance:
-            customer.balance +
-            (update.type === "received" ? update.amount : -update.amount),
+          balance,
         };
+      });
 
-        return {
-          ...customer,
-          balance: transaction.balance,
-          transactions: [...customer.transactions, transaction],
-        };
-      }
-
-      return customer;
+      return {
+        ...customer,
+        balance,
+        transactions: [...customer.transactions, ...newTransactions],
+      };
     });
 
     saveCustomers(updatedCustomers);

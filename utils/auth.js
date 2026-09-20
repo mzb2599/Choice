@@ -1,8 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from "react-native";
 
-export const BACKEND_BASE =
-  Platform.OS === "web" ? "http://localhost:4000" : "http://10.0.2.2:4000";
+export const BACKEND_BASE = process.env.EXPO_PUBLIC_BACKEND_BASE;
+
+if (!BACKEND_BASE) {
+  throw new Error("EXPO_PUBLIC_BACKEND_BASE is not configured");
+}
 const SESSION_KEY = "choice_session";
 
 export const getSession = async () => {
